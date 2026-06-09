@@ -1,406 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Bored Shutter</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Boring Shutter — Portfolio</title>
+    <meta name="author" content="Cris Bedoya">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cris Bedoya — Film &amp; Photography">
+    <meta name="twitter:description" content="Cris Bedoya is a film director and photographer working in cinematic stills, portraiture, and documentary.">
+    <meta name="description" content="Boring Shutter — a quietly engaging photography &amp; film practice.">
+    <meta property="og:title" content="Boring Shutter — Portfolio">
+    <meta property="og:description" content="Boring Shutter — a quietly engaging photography &amp; film practice.">
+
+    <!-- Google Fonts Framework Integration -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+
+    <!-- Tailwind CSS v4 Browser Engine CDN -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
     <style>
-        /* ---------- RESET & BASE ---------- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Camera UI Custom Typography */
+        @font-face {
+            font-family: 'CameraPlainVariable';
+            src: url('https://cdn.gpteng.co/mcp-widgets/v1/fonts/CameraPlainVariable.woff2') format('woff2');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
         }
 
-        body {
-            background-color: #fdfdf7;   /* soft paper white */
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            color: #1a1a1a;
-            line-height: 1.4;
-            font-weight: 400;
-            -webkit-font-smoothing: antialiased;
+        /* Project Color Token Palette (Shadcn Slate Config) */
+        :root {
+            --background: #ffffff;
+            --foreground: #0f172a;
+            --primary: #0f172a;
+            --animate-fade-up: fadeUp 0.8s cubic-bezier(0.16, 1, 0.32, 1) forwards;
+            --animate-fade-in: fadeIn 1s ease-out forwards;
         }
 
-        /* subtle grid texture (barely visible) */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background-image: 
-                linear-gradient(#e6e4dc 1px, transparent 1px),
-                linear-gradient(90deg, #e6e4dc 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.2;
-            z-index: -1;
-        }
-
-        /* smooth scroll behaviour */
         html {
             scroll-behavior: smooth;
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        /* container – wide but comfortable reading width */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 2rem 2rem 4rem 2rem;
+        h1, h2, h3, .font-display {
+            font-family: 'Fraunces', Georgia, serif;
         }
 
-        /* ---------- TYPOGRAPHY ---------- */
-        h1, h2, h3, .logo, .nav-links, .section-label, .project-caption, .contact-item, footer {
-            font-family: 'Inter', sans-serif;
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 500;
-            letter-spacing: -0.02em;
-            text-decoration: none;
-            color: #1a1a1a;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.2s ease;
+        /* Core Animation Keyframes */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .logo:hover {
-            border-bottom-color: #1a1a1a;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        /* headline / intro */
-        .hero {
-            margin: 5rem 0 8rem 0;
-            max-width: 780px;
+        /* Scroll Interaction Layout Reveal Transitions */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.32, 1), 
+                        transform 1.2s cubic-bezier(0.16, 1, 0.32, 1);
+            will-change: transform, opacity;
         }
 
-        .hero-tagline {
-            font-size: 2.8rem;
-            font-weight: 500;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
-            margin-bottom: 1.5rem;
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .hero-description {
-            font-size: 1.2rem;
-            line-height: 1.5;
-            color: #2c2c2c;
-            border-left: 2px solid #d4d2c8;
-            padding-left: 1.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .hero-description span {
-            display: inline-block;
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            color: #6b6b64;
-        }
-
-        /* section styling */
-        section {
-            margin-bottom: 8rem;
-        }
-
-        .section-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: #8c8a80;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            border-bottom: 1px solid #e2e0d6;
-            display: inline-block;
-            padding-bottom: 0.5rem;
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            font-weight: 450;
-            letter-spacing: -0.01em;
-            margin-bottom: 2rem;
-        }
-
-        /* Work grid – minimal masonry feeling */
-        .work-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 1rem;
-        }
-
-        .project-item {
-            transition: transform 0.2s ease, opacity 0.2s ease;
-        }
-
-        .project-item:hover {
-            transform: translateY(-4px);
-        }
-
-        .image-placeholder {
-            background-color: #eae8e0;
-            aspect-ratio: 4 / 5;
-            width: 100%;
+        /* Lovable Platform Brand Utility styles */
+        #lovable-badge {
+            --badge-bg: #1b1b1b;
+            --badge-text: #c5c1b9;
+            --badge-text-hover: #dcdad5;
+            --badge-radius: 6px;
+            --badge-padding: 8px;
+            --badge-gap: 6px;
+            --badge-shadow: 0 0 0 1px rgba(0,0,0,0.88), 0 1px 0 0 rgba(0,0,0,0.04), 0 2px 2px -1px rgba(0,0,0,0.08);
+            --badge-transition-duration: 0.2s;
+            --focus-color: #575ECF;
+            --focus-offset: 2px;
+            --focus-width: 2px;
+            position: fixed;
+            bottom: 12px;
+            right: 12px;
+            height: 24px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: #9c9a8e;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            font-weight: 400;
-            transition: background-color 0.2s ease;
-            margin-bottom: 1rem;
+            z-index: 1000000;
+            background-color: var(--badge-bg) !important;
+            color: var(--badge-text) !important;
+            border-radius: var(--badge-radius);
+            box-shadow: var(--badge-shadow) !important;
+            font-size: 12px;
+            font-family: CameraPlainVariable, sans-serif;
+            transform: translateZ(0);
+            transition: opacity 0.24s ease;
         }
-
-        .project-item:hover .image-placeholder {
-            background-color: #dddcd2;
-        }
-
-        .project-caption {
-            font-size: 0.9rem;
-            font-weight: 450;
-            letter-spacing: -0.2px;
-            margin-top: 0.5rem;
-        }
-
-        .project-caption small {
-            font-weight: 400;
-            color: #76766b;
-            font-size: 0.8rem;
-            display: block;
-            margin-top: 0.2rem;
-        }
-
-        /* about section – two column minimal */
-        .about-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 3rem;
-            justify-content: space-between;
-        }
-
-        .about-text {
-            flex: 2;
-            min-width: 240px;
-        }
-
-        .about-text p {
-            font-size: 1.15rem;
-            line-height: 1.5;
-            color: #2e2e28;
-            margin-bottom: 1.5rem;
-        }
-
-        .about-details {
-            flex: 1;
-            min-width: 200px;
-            border-top: 1px solid #e2e0d6;
-            padding-top: 1rem;
-        }
-
-        .detail-block {
-            margin-bottom: 1.2rem;
-        }
-
-        .detail-title {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #9b998f;
-            margin-bottom: 0.3rem;
-        }
-
-        .detail-value {
-            font-size: 1rem;
-            font-weight: 450;
-        }
-
-        /* contact – simple + underline links */
-        .contact-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin-top: 1rem;
-        }
-
-        .contact-item a {
-            text-decoration: none;
-            color: #1a1a1a;
-            font-size: 1.1rem;
-            font-weight: 450;
-            border-bottom: 1px solid #dad8ce;
-            transition: border-color 0.2s;
-        }
-
-        .contact-item a:hover {
-            border-bottom-color: #1a1a1a;
-        }
-
-        .contact-note {
-            font-size: 0.85rem;
-            color: #7c7c72;
-            margin-top: 2rem;
-        }
-
-        /* footer */
-        footer {
-            margin-top: 5rem;
-            padding-top: 2rem;
-            border-top: 1px solid #e2e0d6;
-            font-size: 0.8rem;
-            color: #8a887e;
-            text-align: center;
-            letter-spacing: 0.2px;
-        }
-
-        /* responsive refinements */
-        @media (max-width: 780px) {
-            .container {
-                padding: 1.5rem;
-            }
-            .hero {
-                margin: 3rem 0 5rem 0;
-            }
-            .hero-tagline {
-                font-size: 2rem;
-            }
-            .hero-description {
-                font-size: 1rem;
-            }
-            section {
-                margin-bottom: 5rem;
-            }
-            .work-grid {
-                gap: 1.5rem;
-            }
-        }
-
-        /* subtle animation for images (just fade-in) */
-        @keyframes fadeSlide {
-            0% { opacity: 0; transform: translateY(10px);}
-            100% { opacity: 1; transform: translateY(0);}
-        }
-
-        .project-item {
-            animation: fadeSlide 0.5s ease forwards;
+        #lovable-badge.closing {
             opacity: 0;
+            pointer-events: none;
         }
-
-        .project-item:nth-child(1) { animation-delay: 0.05s; }
-        .project-item:nth-child(2) { animation-delay: 0.1s; }
-        .project-item:nth-child(3) { animation-delay: 0.15s; }
-        .project-item:nth-child(4) { animation-delay: 0.2s; }
-        .project-item:nth-child(5) { animation-delay: 0.25s; }
-        .project-item:nth-child(6) { animation-delay: 0.3s; }
+        #lovable-badge-cta {
+            display: flex;
+            align-items: center;
+            gap: var(--badge-gap);
+            padding: 0 var(--badge-padding);
+            height: 100%;
+            color: inherit;
+            text-decoration: none;
+            white-space: nowrap;
+            border-radius: var(--badge-radius) 0 0 var(--badge-radius);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        #lovable-badge-cta:hover { background: rgba(255,255,255,0.04); color: var(--badge-text-hover); }
+        #lovable-badge-divider { width: 1px; height: 24px; background-color: rgba(255,255,255,0.04); }
+        #lovable-badge-close { width: 24px; height: 24px; cursor: pointer; background: none; border: none; display: flex; align-items: center; justify-content: center; }
+        #lovable-badge-close svg path { fill: var(--badge-text); }
+        #lovable-badge-close:hover svg path { fill: var(--badge-text-hover); }
     </style>
 </head>
-<body>
-<div class="container">
-    
-    <!-- simple header / logo -->
-    <header style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 2rem;">
-        <a href="#" class="logo">Bored Shutter</a>
-        <div style="display: flex; gap: 2rem; font-size: 0.85rem;">
-            <a href="#selected" style="text-decoration: none; color: #4a4a42; border-bottom: 1px solid transparent;">work</a>
-            <a href="#about" style="text-decoration: none; color: #4a4a42; border-bottom: 1px solid transparent;">about</a>
-            <a href="#contact" style="text-decoration: none; color: #4a4a42; border-bottom: 1px solid transparent;">contact</a>
-        </div>
+<body class="min-h-screen bg-white text-slate-900">
+
+    <!-- Global Floating Sticky Navigation -->
+    <header class="fixed inset-x-0 top-5 z-40 flex justify-center px-4">
+        <nav class="flex items-center gap-1 rounded-full border border-slate-900/10 bg-white/80 px-2 py-2 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)] backdrop-blur-xl">
+            <a href="#top" class="rounded-full bg-slate-900 px-4 py-1.5 text-xs text-white transition-colors">Home</a>
+            <a href="#work" class="rounded-full px-4 py-1.5 text-xs text-slate-900/70 transition-colors hover:text-slate-900">Work</a>
+            <a href="#about" class="rounded-full px-4 py-1.5 text-xs text-slate-900/70 transition-colors hover:text-slate-900">About</a>
+            <a href="#contact" class="rounded-full px-4 py-1.5 text-xs text-slate-900/70 transition-colors hover:text-slate-900">Contact</a>
+        </nav>
     </header>
 
-    <!-- intro / hero section -->
-    <div class="hero">
-        <div class="hero-tagline">
-            Bored Shutter — est. 2025
+    <!-- Section 00: Hero Stage Land -->
+    <section id="top" class="flex min-h-screen items-center px-6 pt-32 md:px-10">
+        <div class="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-16">
+            <div class="md:col-span-7 md:col-start-1" style="animation: var(--animate-fade-up);">
+                <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">Boring Shutter — est. 2026</p>
+                <h1 class="mt-6 text-balance text-4xl font-medium leading-[1.15] tracking-tight text-slate-900 md:text-[3.25rem] md:leading-[1.1]">
+                    Cris Bedoya is a photographer and filmmaker based in New York making cinematic stills and portrait films. Quiet work, taken slowly, on purpose.
+                </h1>
+                <div class="mt-10 flex flex-wrap items-center gap-3">
+                    <a href="#work" class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2 text-sm text-white transition-transform hover:scale-[1.03]">
+                        See the work <span aria-hidden="true">›</span>
+                    </a>
+                    <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-slate-900/20 px-5 py-2 text-sm text-slate-900 transition-colors hover:border-slate-900">
+                        Book a session
+                    </a>
+                </div>
+            </div>
+            <a href="#about" aria-label="About the photographer" class="group relative block md:col-span-4 md:col-start-9 md:translate-y-6" style="animation: var(--animate-fade-in); animation-delay: 0.3s;">
+                <div class="overflow-hidden rounded-sm">
+                    <div role="img" aria-label="Portrait of the photographer" class="aspect-[3/4] w-full bg-slate-950 opacity-90 transition-all duration-[600ms] ease-out group-hover:scale-[1.04] group-hover:opacity-100"></div>
+                </div>
+                <div class="mt-3 flex items-center justify-between text-xs text-slate-900/50 transition-colors group-hover:text-slate-900">
+                    <span class="font-mono uppercase tracking-[0.25em]">Portrait</span>
+                    <span>About ↓</span>
+                </div>
+            </a>
         </div>
-        <div class="hero-description">
-            Cris Bedoya -photographer and filmer based in Loma Linda, Clifornia. <br/>
-            <span>Portrait · About ↓</span>
-        </div>
-    </div>
+    </section>
 
-    <!-- 01 — Selected work + Recent projects (combined into one focused body) -->
-    <section id="selected">
-        <div class="section-label">01 — Featured work</div>
-        <h2>Recent projects</h2>
-        <div class="work-grid">
-            <!-- project items (placeholders, but coherent with the quiet Bored aesthetic) -->
-            <div class="project-item">
-                <div class="image-placeholder">still · 35mm</div>
-                <div class="project-caption">North Atlantic, 2024 <small>cinematic still</small></div>
+    <!-- Section 01: Media Showcase / Recent Gallery Portfolio -->
+    <section id="work" class="px-6 pt-32 md:px-10 md:pt-48">
+        <div class="mx-auto max-w-6xl">
+            <div class="reveal mb-16">
+                <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">01 — Selected work</p>
+                <h2 class="mt-4 text-3xl font-medium tracking-tight text-slate-900 md:text-5xl">Recent projects</h2>
             </div>
-            <div class="project-item">
-                <div class="image-placeholder">portrait series</div>
-                <div class="project-caption">Lena, Oslo <small>portrait film (16mm)</small></div>
-            </div>
-            <div class="project-item">
-                <div class="image-placeholder">archive #03</div>
-                <div class="project-caption">Coastal Light <small>digital · medium format</small></div>
-            </div>
-            <div class="project-item">
-                <div class="image-placeholder">night frames</div>
-                <div class="project-caption">Gas Station, Winter <small>35mm · colour</small></div>
-            </div>
-            <div class="project-item">
-                <div class="image-placeholder">silent portraits</div>
-                <div class="project-caption">Emma, 2025 <small>b&w · film</small></div>
-            </div>
-            <div class="project-item">
-                <div class="image-placeholder">series · interiors</div>
-                <div class="project-caption">After Hours <small>available light</small></div>
+            
+            <figure class="reveal mb-24 overflow-hidden rounded-sm">
+                <div role="img" aria-label="Hero" class="aspect-[16/10] w-full bg-slate-950 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]"></div>
+                <figcaption class="mt-3 flex justify-between text-xs text-slate-900/50">
+                    <span>Cinematic Landscape Framing</span>
+                    <span>Medium Format · 2026</span>
+                </figcaption>
+            </figure>
+
+            <div class="space-y-28">
+                <!-- Project Node Item 01 -->
+                <figure class="reveal grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
+                    <div class="overflow-hidden rounded-sm md:col-span-9">
+                        <div role="img" aria-label="Shadow Play" class="aspect-[4/3] w-full bg-slate-950 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]"></div>
+                    </div>
+                    <figcaption class="md:col-span-3 md:self-end">
+                        <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">01 / 07</p>
+                        <p class="mt-3 text-xl font-medium tracking-tight text-slate-900">Shadow Play</p>
+                        <p class="mt-2 text-xs text-slate-900/60">35mm Film · 2026</p>
+                    </figcaption>
+                </figure>
+
+                <!-- Project Node Item 02 -->
+                <figure class="reveal grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
+                    <div class="overflow-hidden rounded-sm md:col-span-9 md:order-last">
+                        <div role="img" aria-label="Urban Geometry" class="aspect-[4/3] w-full bg-slate-950 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]"></div>
+                    </div>
+                    <figcaption class="md:col-span-3 md:self-end">
+                        <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">02 / 07</p>
+                        <p class="mt-3 text-xl font-medium tracking-tight text-slate-900">Urban Geometry</p>
+                        <p class="mt-2 text-xs text-slate-900/60">Digital Stills · 2025</p>
+                    </figcaption>
+                </figure>
+
+                <!-- Project Node Item 03 -->
+                <figure class="reveal grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
+                    <div class="overflow-hidden rounded-sm md:col-span-9">
+                        <div role="img" aria-label="Silent Portraiture" class="aspect-[4/3] w-full bg-slate-950 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]"></div>
+                    </div>
+                    <figcaption class="md:col-span-3 md:self-end">
+                        <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">03 / 07</p>
+                        <p class="mt-3 text-xl font-medium tracking-tight text-slate-900">Silent Portraiture</p>
+                        <p class="mt-2 text-xs text-slate-900/60">120 Format · 2026</p>
+                    </figcaption>
+                </figure>
+
+                <!-- Project Node Item 04 -->
+                <figure class="reveal grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
+                    <div class="overflow-hidden rounded-sm md:col-span-9 md:order-last">
+                        <div role="img" aria-label="Suburban Solitude" class="aspect-[4/3] w-full bg-slate-950 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]"></div>
+                    </div>
+                    <figcaption class="md:col-span-3 md:self-end">
+                        <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">04 / 07</p>
+                        <p class="mt-3 text-xl font-medium tracking-tight text-slate-900">Suburban Solitude</p>
+                        <p class="mt-2 text-xs text-slate-900/60">35mm Film · 2026</p>
+                    </figcaption>
+                </figure>
+
+                <!-- Project Node Item 05 -->
+                <figure class="reveal grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
+                    <div class="overflow-hidden rounded-sm md:col-span-9">
+                        <div role="img" aria-label="Tactile Horizons" class="aspect-[4/3] w-full bg-slate-950 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]"></div>
+                    </div>
+                    <figcaption class="md:col-span-3 md:self-end">
+                        <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">05 / 07</p>
+                        <p class="mt-3 text-xl font-medium tracking-tight text-slate-900">Tactile Horizons</p>
+                        <p class="mt-2 text-xs text-slate-900/60">Digital Capture · 2025</p>
+                    </figcaption>
+                </figure>
+
+                <!-- Project Node Item 06 -->
+                <figure class="reveal grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
+                    <div class="overflow-hidden rounded-sm md:col-span-9 md:order-last">
+                        <div role="img" aria-label="Fleeting Illumination" class="aspect-[4/3] w-full bg-slate-950 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]"></div>
+                    </div>
+                    <figcaption class="md:col-span-3 md:self-end">
+                        <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">06 / 07</p>
+                        <p class="mt-3 text-xl font-medium tracking-tight text-slate-900">Fleeting Illumination</p>
+                        <p class="mt-2 text-xs text-slate-900/60">120 Format · 2026</p>
+                    </figcaption>
+                </figure>
+
+                <!-- Project Node Item 07 -->
+                <figure class="reveal grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
+                    <div class="overflow-hidden rounded-sm md:col-span-9">
+                        <div role="img" aria-label="Static Narrative" class="aspect-[4/3] w-full bg-slate-950 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]"></div>
+                    </div>
+                    <figcaption class="md:col-span-3 md:self-end">
+                        <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">07 / 07</p>
+                        <p class="mt-3 text-xl font-medium tracking-tight text-slate-900">Static Narrative</p>
+                        <p class="mt-2 text-xs text-slate-900/60">Super 8 Output · 2026</p>
+                    </figcaption>
+                </figure>
             </div>
         </div>
     </section>
 
-    <!-- 02 — About (personal statement) -->
-    <section id="about">
-        <div class="section-label">02 — About</div>
-        <div class="about-wrapper">
-            <div class="about-text">
-                <p>I make pictures that don’t shout. Slow observation, available light, and a quiet sense of composition. My work is an attempt to notice what’s already there — a glance, a shadow, a moment of stillness in movement.<br/><br/>
-                I shoot on 35mm and digital, but the format matters less than the intention. Let the pictures do the talking. Keep it Bored. That’s where the honesty lives.</p>
-                <p>Based between analogue and hard drives, I collaborate with individuals and brands who value patience over trends.</p>
-            </div>
-            <div class="about-details">
-                <div class="detail-block">
-                    <div class="detail-title">Based</div>
-                    <div class="detail-value">[City, Country]</div>
+    <!-- Section 02: Editorial Statement Context -->
+    <section id="about" class="px-6 pt-40 md:px-10 md:pt-56">
+        <div class="mx-auto max-w-3xl">
+            <p class="reveal font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">02 — About</p>
+            <p class="reveal mt-8 text-2xl font-normal leading-[1.4] tracking-tight text-slate-900 md:text-3xl">
+                My work centers on the texture of moments left alone. By stripping back visual noise and leaning into long tracking frames and high contrast monochrome formats, I seek a patient connection between context and subject. Quiet work, taken slowly, on purpose.
+            </p>
+            <div class="reveal mt-20 grid grid-cols-2 gap-y-10 text-sm md:grid-cols-4">
+                <div>
+                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-slate-900/50">Based</p>
+                    <p class="mt-2 text-slate-900">New York, USA</p>
                 </div>
-                <div class="detail-block">
-                    <div class="detail-title">Since</div>
-                    <div class="detail-value">[Year]</div>
+                <div>
+                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-slate-900/50">Since</p>
+                    <p class="mt-2 text-slate-900">2019</p>
                 </div>
-                <div class="detail-block">
-                    <div class="detail-title">Formats</div>
-                    <div class="detail-value">35mm · Digital · Medium Format</div>
+                <div>
+                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-slate-900/50">Formats</p>
+                    <p class="mt-2 text-slate-900">35mm · Digital</p>
                 </div>
-                <div class="detail-block">
-                    <div class="detail-title">Represented</div>
-                    <div class="detail-value">Independent</div>
+                <div>
+                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-slate-900/50">Represented</p>
+                    <p class="mt-2 text-slate-900">Independent</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 03 — Contact (say hello) -->
-    <section id="contact">
-        <div class="section-label">03 — Contact</div>
-        <h2>Say hello.</h2>
-        <div class="contact-links">
-            <div class="contact-item"><a href="mailto:hello@boredshutter.com">hello@boredshutter.com</a></div>
-            <div class="contact-item"><a href="#">+00 000 000 0000</a></div>
-            <div class="contact-item"><a href="#">[City, Country]</a></div>
+    <!-- Section 03: Communication / Lead Channel Routing -->
+    <section id="contact" class="px-6 pt-40 md:px-10 md:pt-56">
+        <div class="mx-auto max-w-4xl">
+            <p class="reveal font-mono text-[10px] uppercase tracking-[0.3em] text-slate-900/50">03 — Contact</p>
+            <h2 class="reveal mt-6 text-5xl font-medium leading-[0.95] tracking-tight text-slate-900 md:text-7xl">Say hello.</h2>
+            <a href="mailto:cris@boringshutter.com" class="reveal mt-10 inline-block text-xl font-medium tracking-tight text-slate-900 underline decoration-slate-900/20 underline-offset-[8px] transition-colors hover:decoration-slate-900 md:text-3xl">
+                cris@boringshutter.com
+            </a>
+            <div class="reveal mt-16 flex flex-wrap gap-x-8 gap-y-3 text-sm text-slate-900">
+                <a href="https://instagram.com" target="_blank" rel="noreferrer noopener" class="group inline-flex items-center gap-2 transition-opacity hover:opacity-60"><span>Instagram</span><span class="text-xs">[@boringshutter]</span></a>
+                <a href="https://vimeo.com" target="_blank" rel="noreferrer noopener" class="group inline-flex items-center gap-2 transition-opacity hover:opacity-60"><span>Vimeo</span><span class="text-xs">[boringshutter]</span></a>
+                <a href="https://letterboxd.com" target="_blank" rel="noreferrer noopener" class="group inline-flex items-center gap-2 transition-opacity hover:opacity-60"><span>Letterboxd</span><span class="text-xs">[crisbedoya]</span></a>
+                <a href="https://youtube.com" target="_blank" rel="noreferrer noopener" class="group inline-flex items-center gap-2 transition-opacity hover:opacity-60"><span>YouTube</span><span class="text-xs">[BoringShutter]</span></a>
+            </div>
+            <p class="reveal mt-10 text-xs text-slate-900/60">+1 (555) 019-2834 · New York, NY</p>
         </div>
-        <div class="contact-note">For commissions, film inquiries, or just to share a cup of coffee — drop a line. Slow replies appreciated.</div>
     </section>
 
-    <!-- footer -->
-    <footer>
-        Bored Shutter — quiet work, taken slowly. © 2025
+    <!-- Global Layout Footer -->
+    <footer class="mt-40 px-6 py-10 md:px-10">
+        <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 border-t border-slate-900/10 pt-8 text-xs text-slate-900/60 md:flex-row"><p class="text-base font-medium tracking-tight text-slate-900">Boring Shutter</p>
+            <p>© 2026 — All rights reserved</p>
+        </div>
     </footer>
-</div>
 
-<!-- subtle scroll indicator – just for fun, no extra fluff -->
+    <!-- Lovable Sticky Badge Container Component -->
+    <aside id="lovable-badge" role="complementary" dir="ltr" lang="en" aria-label="Edit with Lovable">
+        <a id="lovable-badge-cta" target="_blank" href="https://lovable.dev" rel="noopener nofollow" aria-label="Edit with Lovable">
+            <span id="lovable-badge-text">Edit with</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="52" height="16" fill="none" viewBox="0 0 52 16">
+                <path fill="#FCFBF8" fill-rule="evenodd" d="M20.318 5.25c.643 0 1.206.14 1.69.418a2.81 2.81 0 0 1 1.118 1.191c.266.513.4 1.115.4 1.807s-.134 1.296-.4 1.812a2.81 2.81 0 0 1-1.118 1.193c-.484.278-1.047.418-1.69.418s-1.208-.14-1.695-.418a2.85 2.85 0 0 1-1.125-1.193c-.262-.516-.393-1.12-.393-1.812s.131-1.294.393-1.807a2.848 2.848 0 0 1 1.125-1.191c.487-.279 1.052-.418 1.695-.418Zm0 1.425c-.27 0-.504.076-.7.228-.193.147-.34.37-.443.67-.102.295-.153.66-.153 1.093 0 .435.05.801.153 1.1.102.3.25.524.443.676.196.147.43.22.7.22.27 0 .502-.073.694-.22.193-.152.341-.375.443-.67.103-.299.153-.667.153-1.106 0-.65-.112-1.145-.337-1.481a1.08 1.08 0 0 0-.953-.51ZM32.7 5.25c.61 0 1.127.1 1.549.3.422.197.74.48.953.849.217.368.325.809.325 1.32v2.704c0 .29.02.562.062.812.044.245.108.4.19.466V12h-1.935a5.895 5.895 0 0 1-.105-.684 7.745 7.745 0 0 1-.02-.228 2.293 2.293 0 0 1-.151.203c-.205.242-.47.437-.793.584-.32.143-.685.215-1.094.215-.406 0-.77-.08-1.094-.24a1.845 1.845 0 0 1-.756-.682 1.984 1.984 0 0 1-.27-1.045c0-.606.178-1.069.535-1.388.356-.324.87-.534 1.542-.633l1.125-.16c.225-.032.403-.074.534-.123a.622.622 0 0 0 .288-.196.549.549 0 0 0 .093-.327.65.65 0 0 0-.11-.367.702.702 0 0 0-.32-.27c-.14-.07-.31-.105-.51-.105-.32 0-.576.083-.768.251-.193.164-.298.39-.314.676h-1.923c.016-.434.147-.82.393-1.155.25-.34.596-.604 1.039-.792.442-.189.954-.283 1.535-.283Zm.99 3.498a.98.98 0 0 1-.215.14 2.49 2.49 0 0 1-.584.178l-.473.092c-.315.061-.553.156-.713.283-.155.127-.233.305-.233.534 0 .23.084.412.252.547.168.135.383.203.645.203s.494-.058.694-.173c.201-.118.355-.282.461-.49.11-.21.166-.448.166-.714v-.6Zm4.526-2.375c.065-.125.138-.243.221-.349.197-.25.437-.44.719-.571.282-.135.6-.203.952-.203.528 0 .988.138 1.377.412.389.275.688.67.896 1.186.21.512.314 1.12.314 1.824 0 .7-.107 1.309-.32 1.825-.213.512-.518.906-.915 1.18-.393.275-.854.412-1.383.412-.352 0-.667-.062-.946-.184a1.832 1.832 0 0 1-.7-.554 2.2 2.2 0 0 1-.234-.383V12h-1.843V3h1.862v3.373Zm1.284.296c-.274 0-.51.085-.707.253-.192.163-.338.397-.436.7a3.376 3.376 0 0 0-.148 1.05c0 .406.05.759.148 1.058.098.299.243.53.436.694.197.164.433.246.707.246.279 0 .512-.082.7-.246.193-.164.336-.395.43-.694.099-.3.148-.652.148-1.058 0-.405-.05-.757-.147-1.056-.095-.299-.238-.53-.43-.694a1.015 1.015 0 0 0-.7-.253Zm9.416-1.419c.602 0 1.136.131 1.604.393.466.262.829.643 1.086 1.143.263.5.394 1.097.394 1.794 0 .25-.002.449-.006.596H47.51c.018.288.071.538.164.75a1.3 1.3 0 0 0 .491.596c.214.13.465.196.757.196.319 0 .583-.082.792-.246.209-.167.34-.403.393-.706h1.862a2.48 2.48 0 0 1-.485 1.235 2.54 2.54 0 0 1-1.051.805c-.439.188-.949.283-1.53.283-.655 0-1.225-.125-1.708-.375a2.672 2.672 0 0 1-1.13-1.143c-.267-.508-.4-1.137-.4-1.887 0-.712.14-1.327.418-1.843a2.86 2.86 0 0 1 1.155-1.186c.491-.27 1.051-.405 1.678-.405Zm-.044 1.345c-.274 0-.516.068-.725.203a1.29 1.29 0 0 0-.479.59 2.045 2.045 0 0 0-.132.498h2.562a1.873 1.873 0 0 0-.138-.602 1.061 1.061 0 0 0-.418-.516 1.243 1.243 0 0 0-.67-.173Z" clip-rule="evenodd"></path>
+                <path fill="#FCFBF8" d="m26.605 9.995 1.342-4.566h1.924L27.628 12h-2.07l-2.33-6.57h1.98l1.397 4.565Zm-13.013.143h2.256c1.632 0 1.421 1.837 1.418 1.861h-5.603V3h1.93v7.138Zm31.516 1.861h-1.862V3h1.862v8.999Z"></path>
+                <path fill="url(#a)" fill-rule="evenodd" d="M2.7 3c1.492 0 2.7 1.192 2.7 2.663v1.012h.9c1.49 0 2.7 1.192 2.7 2.662S7.791 12 6.3 12H0V5.663C0 4.193 1.209 3 2.7 3Z" clip-rule="evenodd"></path>
+                <defs>
+                    <radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="matrix(-1.54236 7.07838 -10.231 -2.15602 4.627 5.022)" gradientUnits="userSpaceOnUse">
+                        <stop offset=".106" stop-color="#FE7B02"></stop>
+                        <stop offset=".394" stop-color="#FE3F21"></stop>
+                        <stop offset=".608" stop-color="#F858BC"></stop>
+                        <stop offset=".929" stop-color="#575ECF"></stop>
+                    </radialGradient>
+                </defs>
+            </svg>
+        </a>
+        <span id="lovable-badge-divider" aria-hidden="true"></span>
+        <button id="lovable-badge-close" aria-label="Dismiss" title="Dismiss" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M10.646 4.646a.5.5 0 1 1 .707.708L8.707 8l2.646 2.646a.5.5 0 1 1-.707.707L8 8.707l-2.646 2.646a.5.5 0 1 1-.708-.707L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708L8 7.293l2.646-2.647Z"></path>
+            </svg>
+        </button>
+    </aside>
+
+    <!-- Native JavaScript Engine: Handles Layout Animations and Badge Closures -->
+    <script>
+        // Smooth Reveal Scroll Animation Logic
+        document.addEventListener("DOMContentLoaded", function() {
+            const revealElements = document.querySelectorAll(".reveal");
+            
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("active");
+                        // Once animated, unobserve to maximize browser rendering efficiency
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.10, // Triggers when 10% of element bounds hit viewport
+                rootMargin: "0px 0px -40px 0px"
+            });
+
+            revealElements.forEach(element => {
+                revealObserver.observe(element);
+            });
+        });
+
+        // Hide badge if nested inside an iframe environment
+        if (window.self !== window.top || navigator.userAgent.includes('puppeteer')) {
+            const badge = document.getElementById('lovable-badge');
+            if (badge) badge.style.display = 'none';
+        }
+
+        // Close button handler for the branding widget
+        const closeButton = document.getElementById('lovable-badge-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                const badge = document.getElementById('lovable-badge');
+                if (badge) {
+                    badge.classList.add('closing');
+                    setTimeout(() => { if (badge) badge.style.display = 'none'; }, 240);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
