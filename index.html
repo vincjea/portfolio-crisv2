@@ -5,13 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bored Shutter — Portfolio</title>
     <meta name="author" content="Cris Bedoya">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Cris Bedoya — Film &amp; Photography">
-    <meta name="twitter:description" content="Cris Bedoya is a film director and photographer working in cinematic stills, portraiture, and documentary.">
     <meta name="description" content="Bored Shutter — a quietly engaging photography &amp; film practice.">
-    <meta property="og:title" content="Bored Shutter — Portfolio">
-    <meta property="og:description" content="Bored Shutter — a quietly engaging photography &amp; film practice.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -19,12 +13,10 @@
 
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 
-    <style>
-        /* Manually defining Gilroy to prevent @import from breaking the Tailwind v4 parser */
+    <style type="text/tailwindcss">
         @font-face {
             font-family: 'Gilroy';
-            src: url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/fonts/Gilroy-Medium.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/fonts/Gilroy-Medium.woff') format('woff');
+            src: url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/fonts/Gilroy-Medium.woff2') format('woff2');
             font-weight: 500;
             font-style: normal;
             font-display: swap;
@@ -32,45 +24,24 @@
 
         @font-face {
             font-family: 'Gilroy';
-            src: url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/fonts/Gilroy-Bold.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/fonts/Gilroy-Bold.woff') format('woff');
+            src: url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/fonts/Gilroy-Bold.woff2') format('woff2');
             font-weight: 700;
             font-style: normal;
             font-display: swap;
         }
 
-        /* Camera UI Custom Typography */
-        @font-face {
-            font-family: 'CameraPlainVariable';
-            src: url('https://cdn.gpteng.co/mcp-widgets/v1/fonts/CameraPlainVariable.woff2') format('woff2');
-            font-weight: 100 900;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        /* Project Color Token Palette & Base Configuration */
-        :root {
-            --background: #f0ead6;
-            --accent: oklch(0.25 0.05 68.26 / 0.83);
-            --animate-fade-up: fadeUp 0.8s cubic-bezier(0.16, 1, 0.32, 1) forwards;
-            --animate-fade-in: fadeIn 1s ease-out forwards;
-        }
-
         /* Tailwind v4 Configuration Directive */
         @theme {
             --font-display: 'Gilroy', sans-serif;
-            --color-cream: var(--background);
-            --color-accent: var(--accent);
+            --color-cream: #f0ead6;
+            --color-accent: oklch(0.25 0.05 68.26);
         }
 
         html {
             scroll-behavior: smooth;
-            background-color: var(--background);
-            color: var(--accent);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        /* Enforce Gilroy layout rules over Tailwind baseline layers */
+        /* Enforce Gilroy layout rules */
         h1, h2, h3, .font-display {
             font-family: var(--font-display) !important;
         }
@@ -81,14 +52,8 @@
 
         /* Core Animation Keyframes */
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeIn {
@@ -112,7 +77,7 @@
 
         /* Safe Dynamic Navigation Switching Flags */
         .nav-link {
-            color: var(--accent);
+            color: var(--color-accent);
             opacity: 0.6;
             transition: all 0.2s ease;
         }
@@ -120,68 +85,175 @@
             opacity: 1;
         }
         .nav-link[data-active="true"] {
-            background-color: var(--accent) !important;
+            background-color: var(--color-accent) !important;
             color: #ffffff !important;
             opacity: 1;
         }
-
-        /* Lovable Platform Brand Utility styles */
-        #lovable-badge {
-            --badge-bg: #1b1b1b;
-            --badge-text: #c5c1b9;
-            --badge-text-hover: #dcdad5;
-            --badge-radius: 6px;
-            --badge-padding: 8px;
-            --badge-gap: 6px;
-            --badge-shadow: 0 0 0 1px rgba(0,0,0,0.88), 0 1px 0 0 rgba(0,0,0,0.04), 0 2px 2px -1px rgba(0,0,0,0.08);
-            --badge-transition-duration: 0.2s;
-            --focus-color: #575ECF;
-            --focus-offset: 2px;
-            --focus-width: 2px;
-            position: fixed;
-            bottom: 12px;
-            right: 12px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            z-index: 1000000;
-            background-color: var(--badge-bg) !important;
-            color: var(--badge-text) !important;
-            border-radius: var(--badge-radius);
-            box-shadow: var(--badge-shadow) !important;
-            font-size: 12px;
-            font-family: CameraPlainVariable, sans-serif;
-            transform: translateZ(0);
-            transition: opacity 0.24s ease;
-        }
-        #lovable-badge.closing {
-            opacity: 0;
-            pointer-events: none;
-        }
-        #lovable-badge-cta {
-            display: flex;
-            align-items: center;
-            gap: var(--badge-gap);
-            padding: 0 var(--badge-padding);
-            height: 100%;
-            color: inherit;
-            text-decoration: none;
-            white-space: nowrap;
-            border-radius: var(--badge-radius) 0 0 var(--badge-radius);
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-        #lovable-badge-cta:hover { background: rgba(255,255,255,0.04); color: var(--badge-text-hover); }
-        #lovable-badge-divider { width: 1px; height: 24px; background-color: rgba(255,255,255,0.04); }
-        #lovable-badge-close { width: 24px; height: 24px; cursor: pointer; background: none; border: none; display: flex; align-items: center; justify-content: center; }
-        #lovable-badge-close svg path { fill: var(--badge-text); }
-        #lovable-badge-close:hover svg path { fill: var(--badge-text-hover); }
     </style>
 </head>
-<body class="min-h-screen bg-cream text-accent">
+<body class="min-h-screen bg-cream text-accent/[0.83] font-sans">
 
-    <header class="fixed inset-x-0 top-5 z-40 flex justify-center px-4">
-        <nav id="main-nav" class="flex items-center gap-1 rounded-full border border-accent/10 bg-white/80 px-2 py-2 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)] backdrop-blur-xl">
-            <a href="#top" class="nav-link rounded-full px-4 py-1.5 text-xs font-medium" data-active="true">Home</a>
-            <a href="#work" class="nav-link rounded-full px-4 py-1.5 text-xs font-medium">Work</a>
-            <a href="#about" class="nav-link rounded-full px-4 py-1.5 text-xs font-medium">About</a>
-            <a href="#contact" class="nav-link rounded
+    <header class="fixed inset-x-0 top-5 z-40 flex justify-center px-2 sm:px-4">
+        <nav id="main-nav" class="flex flex-wrap items-center justify-center gap-1 sm:gap-2 rounded-full border border-accent/10 bg-white/80 px-2 py-1.5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)] backdrop-blur-xl">
+            <a href="#top" class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium" data-active="true">Home</a>
+            <a href="#work" class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium">Work</a>
+            <a href="#about" class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium">About</a>
+            <a href="#contact" class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium">Contact</a>
+        </nav>
+    </header>
+
+    <section id="top" class="flex min-h-screen items-center px-6 pt-32 md:px-10">
+        <div class="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-16">
+            <div class="md:col-span-7 md:col-start-1" style="animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.32, 1) forwards;">
+                <p class="font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">Bored Shutter — est. 2026</p>
+                <h1 class="mt-6 font-display text-balance text-4xl font-medium leading-[1.15] tracking-tight md:text-[3.25rem] md:leading-[1.1]">
+                    Cris Bedoya - photographer and filmmaker based in Loma Linda, California.
+                </h1>
+                <div class="mt-10 flex flex-wrap items-center gap-3">
+                    <a href="#work" class="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm text-white transition-transform hover:scale-[1.03]">
+                        See the work <span aria-hidden="true">›</span>
+                    </a>
+                    <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-accent/20 px-5 py-2 text-sm transition-colors hover:border-accent">
+                        Book a session
+                    </a>
+                </div>
+            </div>
+            <a href="#about" aria-label="About the photographer" class="group relative block md:col-span-4 md:col-start-9 md:translate-y-6" style="opacity: 0; animation: fadeIn 1s ease-out forwards; animation-delay: 0.3s;">
+                <div class="overflow-hidden rounded-sm">
+                    <div role="img" aria-label="Portrait of the photographer" class="w-full bg-accent opacity-20 transition-all duration-[600ms] ease-out group-hover:scale-[1.04] group-hover:opacity-40" style="height: 400px;"></div>
+                </div>
+                <div class="mt-3 flex items-center justify-between text-xs opacity-50 transition-colors group-hover:opacity-100">
+                    <span class="font-mono uppercase tracking-[0.25em]">Portrait</span>
+                    <span>About ↓</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section id="work" class="px-6 pt-32 md:px-10 md:pt-48">
+        <div class="mx-auto max-w-6xl">
+            <div class="reveal mb-16">
+                <p class="font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">01 — Featured work</p>
+                <h2 class="mt-4 font-display text-3xl font-medium tracking-tight md:text-5xl">Recent projects</h2>
+            </div>
+            
+            <figure class="reveal mb-24 overflow-hidden rounded-sm">
+                <div role="img" aria-label="Hero Showcase" class="w-full bg-accent opacity-10 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]" style="height: 500px;"></div>
+                <figcaption class="mt-3 flex justify-between text-xs opacity-50">
+                    <span>Cinematic Landscape</span>
+                    <span>Editorial - 2026</span>
+                </figcaption>
+            </figure>
+
+            <div class="space-y-28">
+                <figure class="reveal grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
+                    <div class="overflow-hidden rounded-sm md:col-span-9">
+                        <div role="img" aria-label="Shadow Play" class="w-full bg-accent opacity-10 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]" style="height: 450px;"></div>
+                    </div>
+                    <figcaption class="md:col-span-3 md:self-end">
+                        <p class="mt-3 font-display text-xl font-medium tracking-tight">Shadow Play</p>
+                        <p class="mt-2 text-xs opacity-60">Short Film - May 2026</p>
+                    </figcaption>
+                </figure>
+
+                <figure class="reveal grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
+                    <div class="overflow-hidden rounded-sm md:col-span-9 md:order-last">
+                        <div role="img" aria-label="Urban Geometry" class="w-full bg-accent opacity-10 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]" style="height: 450px;"></div>
+                    </div>
+                    <figcaption class="md:col-span-3 md:self-end">
+                        <p class="mt-3 font-display text-xl font-medium tracking-tight">Urban Geometry</p>
+                        <p class="mt-2 text-xs opacity-60">Stills Series - April 2026</p>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="px-6 pt-40 md:px-10 md:pt-56">
+        <div class="mx-auto max-w-3xl">
+            <p class="reveal font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">02 — About</p>
+            <p class="reveal mt-8 text-2xl font-normal leading-[1.4] tracking-tight md:text-3xl">
+                A quietly engaging photography & film practice dedicated to capturing cinematic frames, intimate portraiture, and honest documentary moments.
+            </p>
+            <div class="reveal mt-20 grid grid-cols-2 gap-y-10 text-sm md:grid-cols-4">
+                <div>
+                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] opacity-50">Based</p>
+                    <p class="mt-2">Loma Linda, California</p>
+                </div>
+                <div>
+                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] opacity-50">Since</p>
+                    <p class="mt-2">2024</p>
+                </div>
+                <div>
+                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] opacity-50">Equipment</p>
+                    <p class="mt-2">DaVinci Resolve / Red Rig</p>
+                </div>
+                <div>
+                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] opacity-50">Focus</p>
+                    <p class="mt-2">Direction & Color Grading</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="px-6 pt-40 pb-32 md:px-10 md:pt-56">
+        <div class="mx-auto max-w-4xl">
+            <p class="reveal font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">03 — Contact</p>
+            <h2 class="reveal mt-6 font-display text-5xl font-medium leading-[0.95] tracking-tight md:text-7xl">Still bored?</h2>
+            <a href="mailto:your@email.com" class="reveal mt-10 inline-block text-xl font-medium tracking-tight underline decoration-accent/20 underline-offset-[8px] transition-colors hover:decoration-accent md:text-3xl">
+              your@email.com
+            </a>
+            <div class="reveal mt-16 flex flex-wrap gap-x-8 gap-y-3 text-sm">
+                <a href="https://instagram.com" target="_blank" rel="noreferrer noopener" class="group inline-flex items-center gap-2 transition-opacity hover:opacity-60"><span>Instagram</span><span class="text-xs">[@Boredshutter]</span></a>
+                <a href="https://vimeo.com" target="_blank" rel="noreferrer noopener" class="group inline-flex items-center gap-2 transition-opacity hover:opacity-60"><span>Vimeo</span><span class="text-xs">[Boredshutter]</span></a>
+            </div>
+            <p class="reveal mt-10 text-xs opacity-60">Loma Linda, California</p>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // --- 1. Reveal Scroll Animation Logic ---
+            const revealElements = document.querySelectorAll(".reveal");
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("active");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { root: null, threshold: 0.05, rootMargin: "0px 0px -20px 0px" });
+
+            revealElements.forEach(element => revealObserver.observe(element));
+
+            // --- 2. Dynamic Nav Tracking Logic ---
+            const sections = document.querySelectorAll("section");
+            const navLinks = document.querySelectorAll(".nav-link");
+
+            // Adjusted rootMargin to correctly highlight "Work" and "Contact" when scrolling into view
+            const navObserverOptions = {
+                root: null,
+                threshold: 0.1,
+                rootMargin: "-20% 0px -60% 0px" 
+            };
+
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeId = entry.target.getAttribute("id");
+                        navLinks.forEach(link => {
+                            if (link.getAttribute("href") === `#${activeId}`) {
+                                link.setAttribute("data-active", "true");
+                            } else {
+                                link.removeAttribute("data-active");
+                            }
+                        });
+                    }
+                });
+            }, navObserverOptions);
+
+            sections.forEach(section => navObserver.observe(section));
+        });
+    </script>
+</body>
+</html>
