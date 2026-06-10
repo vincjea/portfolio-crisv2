@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
 
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
     <style type="text/tailwindcss">
         @font-face {
@@ -30,38 +32,25 @@
             font-display: swap;
         }
 
-        /* Tailwind v4 Configuration Directive */
         @theme {
             --font-display: 'Gilroy', sans-serif;
             --color-cream: #f0ead6;
             --color-accent: oklch(0.25 0.05 68.26);
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
+        h1, h2, h3, .font-display { font-family: var(--font-display) !important; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-        /* Enforce Gilroy layout rules */
-        h1, h2, h3, .font-display {
-            font-family: var(--font-display) !important;
-        }
-
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Core Animation Keyframes */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
 
-        /* Scroll Interaction Layout Reveal Transitions */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -69,26 +58,11 @@
                         transform 1.2s cubic-bezier(0.16, 1, 0.32, 1);
             will-change: transform, opacity;
         }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Safe Dynamic Navigation Switching Flags */
-        .nav-link {
-            color: var(--color-accent);
-            opacity: 0.6;
-            transition: all 0.2s ease;
-        }
-        .nav-link:hover {
-            opacity: 1;
-        }
-        .nav-link[data-active="true"] {
-            background-color: var(--color-accent) !important;
-            color: #ffffff !important;
-            opacity: 1;
-        }
+        .nav-link { color: var(--color-accent); opacity: 0.6; transition: all 0.2s ease; }
+        .nav-link:hover { opacity: 1; }
+        .nav-link[data-active="true"] { background-color: var(--color-accent) !important; color: #ffffff !important; opacity: 1; }
     </style>
 </head>
 <body class="min-h-screen bg-cream text-accent/[0.83] font-sans">
@@ -106,7 +80,7 @@
         <div class="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-16">
             <div class="md:col-span-7 md:col-start-1" style="animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.32, 1) forwards;">
                 <p class="font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">Bored Shutter — est. 2026</p>
-                <h1 class="mt-6 font-display text-balance text-4xl font-bold leading-[1.15] tracking-tight md:text-[3.25rem] md:leading-[1.1]">
+                <h1 id="cms-hero-title" class="mt-6 font-display text-balance text-4xl font-bold leading-[1.15] tracking-tight md:text-[3.25rem] md:leading-[1.1]">
                     Cris Bedoya - photographer and filmmaker based in Loma Linda, California.
                 </h1>
                 <div class="mt-10 flex flex-wrap items-center gap-3">
@@ -184,7 +158,7 @@
     <section id="about" class="px-6 pt-40 md:px-10 md:pt-56">
         <div class="mx-auto max-w-3xl">
             <p class="reveal font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">02 — About</p>
-            <p class="reveal mt-8 text-2xl font-normal leading-[1.4] tracking-tight md:text-3xl">
+            <p id="cms-about-text" class="reveal mt-8 text-2xl font-normal leading-[1.4] tracking-tight md:text-3xl">
                 personal statement regarding your purpose or direction with your work. or really just any personal statement you want to share
             </p>
             <div class="reveal mt-20 grid grid-cols-2 gap-y-10 text-sm md:grid-cols-4">
@@ -194,15 +168,15 @@
                 </div>
                 <div>
                     <p class="font-mono text-[10px] uppercase tracking-[0.25em] opacity-50">Since</p>
-                    <p class="mt-2">date</p>
+                    <p id="cms-about-since" class="mt-2">date</p>
                 </div>
                 <div>
                     <p class="font-mono text-[10px] uppercase tracking-[0.25em] opacity-50">Equipment</p>
-                    <p class="mt-2">software/rig</p>
+                    <p id="cms-about-equipment" class="mt-2">software/rig</p>
                 </div>
                 <div>
                     <p class="font-mono text-[10px] uppercase tracking-[0.25em] opacity-50">Businesses</p>
-                    <p class="mt-2">clients</p>
+                    <p id="cms-about-businesses" class="mt-2">clients</p>
                 </div>
             </div>
         </div>
@@ -212,7 +186,7 @@
         <div class="mx-auto max-w-4xl">
             <p class="reveal font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">03 — Contact</p>
             <h2 class="reveal mt-6 font-display text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl">Still bored?</h2>
-            <a href="mailto:your@email.com" class="reveal mt-10 inline-block text-xl font-medium tracking-tight underline decoration-accent/20 underline-offset-[8px] transition-colors hover:decoration-accent md:text-3xl">
+            <a id="cms-email" href="mailto:your@email.com" class="reveal mt-10 inline-block text-xl font-medium tracking-tight underline decoration-accent/20 underline-offset-[8px] transition-colors hover:decoration-accent md:text-3xl">
               your@email.com
             </a>
             <div class="reveal mt-16 flex flex-wrap gap-x-8 gap-y-3 text-sm">
@@ -232,7 +206,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // --- 1. Reveal Scroll Animation Logic ---
+            // Reveal Animation
             const revealElements = document.querySelectorAll(".reveal");
             const revealObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
@@ -242,19 +216,12 @@
                     }
                 });
             }, { root: null, threshold: 0.05, rootMargin: "0px 0px -20px 0px" });
-
             revealElements.forEach(element => revealObserver.observe(element));
 
-            // --- 2. Dynamic Nav Tracking Logic (Fixed for tall sections) ---
+            // Dynamic Nav Tracking
             const sections = document.querySelectorAll("section");
             const navLinks = document.querySelectorAll(".nav-link");
-
-            const navObserverOptions = {
-                root: null,
-                threshold: 0,
-                rootMargin: "-50% 0px -50% 0px" 
-            };
-
+            const navObserverOptions = { root: null, threshold: 0, rootMargin: "-50% 0px -50% 0px" };
             const navObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -269,9 +236,35 @@
                     }
                 });
             }, navObserverOptions);
-
             sections.forEach(section => navObserver.observe(section));
+
+            // --- DATA INJECTION SCRIPT ---
+            fetch('/data.json')
+                .then(response => response.json())
+                .then(data => {
+                    if(document.getElementById('cms-hero-title')) document.getElementById('cms-hero-title').innerText = data.hero_title;
+                    if(document.getElementById('cms-about-text')) document.getElementById('cms-about-text').innerText = data.about_text;
+                    if(document.getElementById('cms-about-since')) document.getElementById('cms-about-since').innerText = data.about_since;
+                    if(document.getElementById('cms-about-equipment')) document.getElementById('cms-about-equipment').innerText = data.about_equipment;
+                    if(document.getElementById('cms-about-businesses')) document.getElementById('cms-about-businesses').innerText = data.about_businesses;
+                    
+                    const emailEl = document.getElementById('cms-email');
+                    if(emailEl) {
+                        emailEl.innerText = data.email;
+                        emailEl.href = "mailto:" + data.email;
+                    }
+                })
+                .catch(err => console.error("Could not load CMS data", err));
         });
+
+        // --- NETLIFY LOGIN REDIRECT ---
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => { document.location.href = "/admin/"; });
+                }
+            });
+        }
     </script>
 </body>
 </html>
