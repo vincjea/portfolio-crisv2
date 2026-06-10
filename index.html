@@ -48,26 +48,25 @@
             font-display: swap;
         }
 
+        /* Project Color Token Palette & Base Configuration */
+        :root {
+            --background: #f0ead6;
+            --accent: oklch(0.25 0.05 68.26 / 0.83);
+            --animate-fade-up: fadeUp 0.8s cubic-bezier(0.16, 1, 0.32, 1) forwards;
+            --animate-fade-in: fadeIn 1s ease-out forwards;
+        }
+
         /* Tailwind v4 Configuration Directive */
         @theme {
             --font-display: 'Gilroy', sans-serif;
-            --color-cream: #f0ead6;
-            --color-accent: oklch(0.25 0.05 68.26 / 0.83);
-        }
-
-        /* Project Color Token Palette */
-        :root {
-            --background: #f0ead6;
-            --foreground: oklch(0.25 0.05 68.26 / 0.83);
-            --primary: oklch(0.25 0.05 68.26 / 0.83);
-            --animate-fade-up: fadeUp 0.8s cubic-bezier(0.16, 1, 0.32, 1) forwards;
-            --animate-fade-in: fadeIn 1s ease-out forwards;
+            --color-cream: var(--background);
+            --color-accent: var(--accent);
         }
 
         html {
             scroll-behavior: smooth;
             background-color: var(--background);
-            color: var(--primary);
+            color: var(--accent);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
@@ -111,28 +110,7 @@
             transform: translateY(0);
         }
 
-        /* Lovable Platform Brand Utility styles */
-        #lovable-badge {
-            --badge-bg: #1b1b1b;
-            --badge-text: #c5c1b9;
-            --badge-text-hover: #dcdad5;
-            --badge-radius: 6px;
-            --badge-padding: 8px;
-            --badge-gap: 6px;
-            --badge-shadow: 0 0 0 1px rgba(0,0,0,0.88), 0 1px 0 0 rgba(0,0,0,0.04), 0 2px 2px -1px rgba(0,0,0,0.08);
-            --badge-transition-duration: 0.2s;
-            --focus-color: #575ECF;
-            --focus-offset: 2px;
-            --focus-width: 2px;
-            position: fixed;
-            bottom: 12px;
-            right: 12px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            z-index: 1000000;
-            background-color: var(--badge-bg) !important;
-            color: var(--badge-text) !important;
-            border-radius: var(--badge-radius);
-            box-shadow: var(--badge-shadow) !important;
-            font-size: 12px;
+        /* Safe Native Nav State Switching Styles */
+        .nav-link {
+            color: var(--accent);
+            opacity: 0.6;
