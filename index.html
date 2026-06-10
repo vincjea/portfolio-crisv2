@@ -20,8 +20,24 @@
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 
     <style>
-        /* Import Gilroy from a public CDN for reliable GitHub deployment */
-        @import url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/css/gilroy.css');
+        /* Manually defining Gilroy to prevent @import from breaking the Tailwind v4 parser */
+        @font-face {
+            font-family: 'Gilroy';
+            src: url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/fonts/Gilroy-Medium.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/fonts/Gilroy-Medium.woff') format('woff');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Gilroy';
+            src: url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/fonts/Gilroy-Bold.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/mahmoud-esmail/Gilroy-Font@master/fonts/Gilroy-Bold.woff') format('woff');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
 
         /* Camera UI Custom Typography */
         @font-face {
@@ -66,39 +82,3 @@
         @keyframes fadeUp {
             from {
                 opacity: 0;
-                transform: translateY(24px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Scroll Interaction Layout Reveal Transitions */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.32, 1), 
-                        transform 1.2s cubic-bezier(0.16, 1, 0.32, 1);
-            will-change: transform, opacity;
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Lovable Platform Brand Utility styles */
-        #lovable-badge {
-            --badge-bg: #1b1b1b;
-            --badge-text: #c5c1b9;
-            --badge-text-hover: #dcdad5;
-            --badge-radius: 6px;
-            --badge-padding: 8px;
-            --badge-gap: 6px;
-            --badge-shadow: 0 0 0 1px rgba(0
