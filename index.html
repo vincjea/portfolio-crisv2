@@ -1,13 +1,88 @@
-fetch('/data.json')
-    .then(response => response.json())
-    .then(data => {
-        // ... (existing text updates)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bored Shutter — Portfolio</title>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 
-        // Apply Colors Dynamically
-        document.documentElement.style.setProperty('--color-accent', data.accent_color);
-        document.documentElement.style.setProperty('--color-cream', data.bg_color);
-        
-        // Update Image
-        const heroImg = document.getElementById('cms-hero-img');
-        if(heroImg) heroImg.style.backgroundImage = `url('${data.hero_image}')`;
-    });
+    <style type="text/tailwindcss">
+        @theme {
+            --font-display: 'Gilroy', sans-serif;
+            --color-cream: #f0ead6;
+            --color-accent: oklch(0.25 0.05 68.26);
+        }
+        html { scroll-behavior: smooth; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 1.2s cubic-bezier(0.16, 1, 0.32, 1), transform 1.2s cubic-bezier(0.16, 1, 0.32, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .nav-link[data-active="true"] { background-color: var(--color-accent) !important; color: #ffffff !important; }
+    </style>
+</head>
+<body class="min-h-screen bg-[var(--color-cream)] text-[var(--color-accent)]">
+
+    <header class="fixed inset-x-0 top-5 z-40 flex justify-center px-4">
+        <nav class="flex items-center gap-2 rounded-full border border-accent/10 bg-white/80 px-4 py-2 shadow-xl backdrop-blur-xl">
+            <a href="#top" class="nav-link px-3 py-1 text-xs font-medium" data-active="true">Home</a>
+            <a href="#work" class="nav-link px-3 py-1 text-xs font-medium">Work</a>
+            <a href="#about" class="nav-link px-3 py-1 text-xs font-medium">About</a>
+        </nav>
+    </header>
+
+    <section id="top" class="flex min-h-screen items-center px-10">
+        <div class="grid max-w-6xl grid-cols-12 items-center gap-16">
+            <div class="col-span-7">
+                <h1 id="cms-hero-title" class="text-5xl font-bold leading-[1.1]">Loading...</h1>
+            </div>
+            <div id="cms-hero-img" class="col-span-4 h-[400px] bg-accent/20 bg-cover bg-center"></div>
+        </div>
+    </section>
+
+    <section id="work" class="px-10 pt-48">
+        <div class="mb-16"><h2>Recent Projects</h2></div>
+        <div id="project-container" class="space-y-28"></div>
+    </section>
+
+    <section id="about" class="px-10 py-56">
+        <p id="cms-about-text" class="text-3xl">Loading...</p>
+    </section>
+
+    <script>
+        // CMS Data Fetching
+        async function loadContent() {
+            // Load Global Settings
+            const settingsRes = await fetch('/data.json');
+            const data = await settingsRes.json();
+            
+            document.getElementById('cms-hero-title').innerText = data.hero_title;
+            document.getElementById('cms-about-text').innerText = data.about_text;
+            document.getElementById('cms-hero-img').style.backgroundImage = `url('${data.hero_image}')`;
+            
+            // Dynamic Styles
+            document.documentElement.style.setProperty('--color-accent', data.accent_color);
+            document.documentElement.style.setProperty('--color-cream', data.bg_color);
+
+            // Load Projects
+            const projRes = await fetch('/projects.json'); // Ensure your CMS points here
+            const projects = await projRes.json();
+            const container = document.getElementById('project-container');
+            
+            container.innerHTML = projects.map(p => `
+                <figure>
+                    <img src="${p.image}" class="w-full h-[450px] object-cover">
+                    <figcaption class="mt-3 flex justify-between text-xs">${p.title} <span>${p.date}</span></figcaption>
+                </figure>
+            `).join('');
+        }
+
+        loadContent();
+
+        // Identity Login
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) window.netlifyIdentity.on("login", () => { document.location.href = "/admin/"; });
+            });
+        }
+    </script>
+</body>
+</html>
