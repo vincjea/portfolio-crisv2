@@ -11,6 +11,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
 
+    <!-- Radwave Demo — display typeface for large headings -->
+    <link rel="preconnect" href="https://fonts.cdnfonts.com">
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/radwave-demo">
+
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 
     <!--
@@ -52,7 +56,8 @@
 
         /* ─── Tailwind v4 Design Tokens ──────────────────────────────── */
         @theme {
-            --font-display: 'Gilroy', sans-serif;
+            --font-display: 'Radwave Demo', 'Gilroy', sans-serif;
+            --font-body:    'Gilroy', sans-serif;
             --color-cream:  #f0ead6;  /* page bg — overridden per theme by JS */
             --color-accent: #363636;  /* ink / text / CTAs — overridden per theme */
         }
@@ -65,7 +70,16 @@
         html { scroll-behavior: smooth; }
 
         /* ─── Font Enforcement ───────────────────────────────────────── */
-        h1, h2, h3, .font-display { font-family: var(--font-display) !important; }
+        /*
+            Radwave Demo ships as a single-weight decorative typeface.
+            font-weight: 400 prevents the browser synthesising faux-bold,
+            which distorts the letterforms. The font reads as "display bold"
+            at natural weight due to its inherent stroke contrast.
+        */
+        h1, h2, h3, .font-display {
+            font-family: var(--font-display) !important;
+            font-weight: 400;
+        }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
 
         /* ─── Keyframes ──────────────────────────────────────────────── */
