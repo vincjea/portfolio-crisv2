@@ -199,6 +199,108 @@
         .showcase-dot.active { opacity: 1; }
         .showcase-dot:hover  { opacity: 0.65; }
 
+        /* ─── Gallery — Featured Viewer + Thumbnail Strip ────────────── */
+
+        /*
+            Stack: .gallery-main-wrap is the clipping container (overflow:hidden).
+            All .gallery-slot children are position:absolute and cross-fade.
+            z-index ensures the exiting slot (blurring out) sits above the
+            incoming slot briefly, so blur bridges the crossfade seam.
+        */
+        .gallery-main-wrap {
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .gallery-slot {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transform: scale(1.03);
+            filter: blur(0px);
+            pointer-events: none;
+            z-index: 0;
+            transition:
+                opacity    700ms cubic-bezier(0.23, 1, 0.32, 1),
+                transform  700ms cubic-bezier(0.23, 1, 0.32, 1),
+                filter     500ms cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .gallery-slot.active {
+            opacity: 1;
+            transform: scale(1.0);
+            pointer-events: auto;
+            z-index: 1;
+        }
+        /* Exit: blur-bridge technique — blurs the outgoing image so the
+           crossfade seam between two solid colors is never jarring */
+        .gallery-slot.exit {
+            opacity: 0;
+            transform: scale(0.97);
+            filter: blur(5px);
+            z-index: 2;
+        }
+
+        /* Strip: horizontal scroll, hidden scrollbar */
+        .gallery-strip {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .gallery-strip::-webkit-scrollbar { display: none; }
+
+        /* Thumbnail */
+        .gallery-thumb {
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+            opacity: 0.35;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            background: none;
+            display: block;
+            transition:
+                opacity   250ms cubic-bezier(0.23, 1, 0.32, 1),
+                transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .gallery-thumb.active { opacity: 1; }
+
+        /* Gate hover on real pointer devices — touch triggers false hover */
+        @media (hover: hover) and (pointer: fine) {
+            .gallery-thumb:not(.active):hover { opacity: 0.65; }
+            .gallery-thumb:active             { transform: scale(0.97); }
+        }
+
+        /* Slide-in bottom bar: scaleX 0→1 from left on active thumbnail */
+        .gallery-thumb-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1.5px;
+            background-color: var(--color-accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition:
+                transform        380ms cubic-bezier(0.23, 1, 0.32, 1),
+                background-color 500ms ease-in-out;
+        }
+        .gallery-thumb.active .gallery-thumb-bar { transform: scaleX(1); }
+
+        /* Reduced motion: opacity-only crossfade, no scale / blur / slide */
+        @media (prefers-reduced-motion: reduce) {
+            .gallery-slot {
+                transition: opacity 0.35s ease;
+                transform: none !important;
+                filter:    none !important;
+            }
+            .gallery-slot.exit  { filter: none; transform: none; }
+            .gallery-thumb      { transition: opacity 200ms ease; }
+            .gallery-thumb-bar  { transition: background-color 500ms ease; transform: scaleX(1); }
+        }
+
         /* ─── Phase 1 — Theme Switcher ───────────────────────────────── */
         .theme-popover {
             position: fixed;
@@ -436,6 +538,115 @@
                 </figure>
 
             </div>
+
+            <!-- ─── Gallery: Slow-Scroll Selector ──────────────────────── -->
+            <!--
+                8 placeholder slots share one featured viewer via cross-fade.
+                The thumbnail strip slow-scrolls automatically and pauses on
+                hover/touch; clicking any thumb selects that image.
+            -->
+            <div class="reveal mt-48">
+
+                <!-- Header row -->
+                <div class="mb-6 flex items-baseline justify-between">
+                    <p class="font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">Gallery</p>
+                    <span class="font-mono text-xs opacity-40"
+                          id="gallery-status"
+                          aria-live="polite"
+                          aria-label="Current image position">01 / 08</span>
+                </div>
+
+                <!-- Featured viewer — explicit height lets all slots be absolute -->
+                <div class="gallery-main-wrap mb-3"
+                     style="height: 520px;"
+                     aria-label="Featured gallery image"
+                     aria-live="polite">
+
+                    <div class="gallery-slot active" data-gi="0">
+                        <div class="w-full h-full flex items-end p-10" style="background:#363636;">
+                            <span class="font-mono text-[10px] tracking-[0.3em]" style="color:#aba7a7;">001 — Untitled</span>
+                        </div>
+                    </div>
+                    <div class="gallery-slot" data-gi="1">
+                        <div class="w-full h-full flex items-end p-10" style="background:#021a30;">
+                            <span class="font-mono text-[10px] tracking-[0.3em]" style="color:#aba7a7;">002 — Untitled</span>
+                        </div>
+                    </div>
+                    <div class="gallery-slot" data-gi="2">
+                        <div class="w-full h-full flex items-end p-10" style="background:#474747;">
+                            <span class="font-mono text-[10px] tracking-[0.3em]" style="color:#c8c8a9;">003 — Untitled</span>
+                        </div>
+                    </div>
+                    <div class="gallery-slot" data-gi="3">
+                        <div class="w-full h-full flex items-end p-10" style="background:#aba7a7;">
+                            <span class="font-mono text-[10px] tracking-[0.3em]" style="color:#363636;">004 — Untitled</span>
+                        </div>
+                    </div>
+                    <div class="gallery-slot" data-gi="4">
+                        <div class="w-full h-full flex items-end p-10" style="background:#363636;">
+                            <span class="font-mono text-[10px] tracking-[0.3em]" style="color:#f0ead6;">005 — Untitled</span>
+                        </div>
+                    </div>
+                    <div class="gallery-slot" data-gi="5">
+                        <div class="w-full h-full flex items-end p-10" style="background:#c8c8a9;">
+                            <span class="font-mono text-[10px] tracking-[0.3em]" style="color:#474747;">006 — Untitled</span>
+                        </div>
+                    </div>
+                    <div class="gallery-slot" data-gi="6">
+                        <div class="w-full h-full flex items-end p-10" style="background:#021a30;">
+                            <span class="font-mono text-[10px] tracking-[0.3em]" style="color:#aba7a7;">007 — Untitled</span>
+                        </div>
+                    </div>
+                    <div class="gallery-slot" data-gi="7">
+                        <div class="w-full h-full flex items-end p-10" style="background:#474747;">
+                            <span class="font-mono text-[10px] tracking-[0.3em]" style="color:#c8c8a9;">008 — Untitled</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Thumbnail strip — horizontally scrollable, auto-drifts slowly -->
+                <div id="gallery-strip"
+                     class="gallery-strip flex gap-2"
+                     role="listbox"
+                     aria-label="Select an image from the gallery">
+
+                    <button class="gallery-thumb active" data-gi="0" role="option" aria-selected="true"  aria-label="Image 1 of 8">
+                        <div style="width:140px;height:88px;background:#363636;"></div>
+                        <div class="gallery-thumb-bar" aria-hidden="true"></div>
+                    </button>
+                    <button class="gallery-thumb" data-gi="1" role="option" aria-selected="false" aria-label="Image 2 of 8">
+                        <div style="width:140px;height:88px;background:#021a30;"></div>
+                        <div class="gallery-thumb-bar" aria-hidden="true"></div>
+                    </button>
+                    <button class="gallery-thumb" data-gi="2" role="option" aria-selected="false" aria-label="Image 3 of 8">
+                        <div style="width:140px;height:88px;background:#474747;"></div>
+                        <div class="gallery-thumb-bar" aria-hidden="true"></div>
+                    </button>
+                    <button class="gallery-thumb" data-gi="3" role="option" aria-selected="false" aria-label="Image 4 of 8">
+                        <div style="width:140px;height:88px;background:#aba7a7;"></div>
+                        <div class="gallery-thumb-bar" aria-hidden="true"></div>
+                    </button>
+                    <button class="gallery-thumb" data-gi="4" role="option" aria-selected="false" aria-label="Image 5 of 8">
+                        <div style="width:140px;height:88px;background:#363636;"></div>
+                        <div class="gallery-thumb-bar" aria-hidden="true"></div>
+                    </button>
+                    <button class="gallery-thumb" data-gi="5" role="option" aria-selected="false" aria-label="Image 6 of 8">
+                        <div style="width:140px;height:88px;background:#c8c8a9;"></div>
+                        <div class="gallery-thumb-bar" aria-hidden="true"></div>
+                    </button>
+                    <button class="gallery-thumb" data-gi="6" role="option" aria-selected="false" aria-label="Image 7 of 8">
+                        <div style="width:140px;height:88px;background:#021a30;"></div>
+                        <div class="gallery-thumb-bar" aria-hidden="true"></div>
+                    </button>
+                    <button class="gallery-thumb" data-gi="7" role="option" aria-selected="false" aria-label="Image 8 of 8">
+                        <div style="width:140px;height:88px;background:#474747;"></div>
+                        <div class="gallery-thumb-bar" aria-hidden="true"></div>
+                    </button>
+
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -693,6 +904,113 @@
             // No auto-advance if user prefers reduced motion
             if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 startAuto();
+            }
+
+
+            // ═══════════════════════════════════════════════════════════════
+            // Gallery — Featured Viewer + Slow-Scroll Thumbnail Strip
+            // ═══════════════════════════════════════════════════════════════
+
+            const gallerySlots  = document.querySelectorAll('.gallery-slot');
+            const galleryThumbs = document.querySelectorAll('.gallery-thumb');
+            const galleryStatus = document.getElementById('gallery-status');
+            const galleryStrip  = document.getElementById('gallery-strip');
+            const GALLERY_COUNT = gallerySlots.length;
+            let activeGI      = 0;
+            let galleryTimer  = null;
+
+            /**
+             * Cross-fades from activeGI to index.
+             * The exiting slot gets .exit (scale-down + blur) at z:2 so its
+             * blur bridges the seam as the entering slot fades in underneath.
+             */
+            function selectGallery(index) {
+                const next = ((index % GALLERY_COUNT) + GALLERY_COUNT) % GALLERY_COUNT;
+                if (next === activeGI) return;
+
+                const exiting = gallerySlots[activeGI];
+                exiting.classList.remove('active');
+                exiting.classList.add('exit');
+                exiting.addEventListener('transitionend', () => {
+                    exiting.classList.remove('exit');
+                }, { once: true });
+
+                activeGI = next;
+                gallerySlots[activeGI].classList.add('active');
+
+                galleryThumbs.forEach((t, i) => {
+                    const sel = i === activeGI;
+                    t.classList.toggle('active', sel);
+                    t.setAttribute('aria-selected', String(sel));
+                });
+
+                if (galleryStatus) {
+                    galleryStatus.textContent =
+                        `${String(activeGI + 1).padStart(2, '0')} / ${String(GALLERY_COUNT).padStart(2, '0')}`;
+                }
+
+                // Keep selected thumb visible without fighting auto-scroll
+                galleryThumbs[activeGI]?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center',
+                });
+            }
+
+            galleryThumbs.forEach((thumb, i) => {
+                thumb.addEventListener('click', () => {
+                    stopGalleryAuto();
+                    selectGallery(i);
+                    startGalleryAuto();
+                });
+            });
+
+            function startGalleryAuto() {
+                stopGalleryAuto();
+                galleryTimer = setInterval(() => selectGallery(activeGI + 1), 6000);
+            }
+            function stopGalleryAuto() {
+                if (galleryTimer) { clearInterval(galleryTimer); galleryTimer = null; }
+            }
+
+            // Pause auto-advance on hover/focus within the gallery
+            const galleryWrap = galleryStrip?.closest('.reveal');
+            if (galleryWrap) {
+                galleryWrap.addEventListener('mouseenter', stopGalleryAuto);
+                galleryWrap.addEventListener('mouseleave', startGalleryAuto);
+            }
+
+            // ── Slow-scroll the thumbnail strip via rAF ──────────────────
+            // Uses direct .scrollLeft writes (not CSS vars) to avoid cascaded
+            // style recalculation on all strip children per the perf rules.
+            let stripDrifting = true;
+            const STRIP_SPEED = 0.32; // px per frame — cinematic pace
+
+            function tickStrip() {
+                if (stripDrifting && galleryStrip) {
+                    galleryStrip.scrollLeft += STRIP_SPEED;
+                    // Soft loop back to 0 when fully scrolled
+                    if (galleryStrip.scrollLeft >=
+                            galleryStrip.scrollWidth - galleryStrip.clientWidth) {
+                        galleryStrip.scrollLeft = 0;
+                    }
+                }
+                requestAnimationFrame(tickStrip);
+            }
+
+            if (galleryStrip) {
+                galleryStrip.addEventListener('mouseenter',  () => { stripDrifting = false; });
+                galleryStrip.addEventListener('mouseleave',  () => { stripDrifting = true;  });
+                galleryStrip.addEventListener('touchstart',  () => { stripDrifting = false; }, { passive: true });
+                // Resume drift 2s after touch ends to let the user make their tap
+                galleryStrip.addEventListener('touchend',    () => {
+                    setTimeout(() => { stripDrifting = true; }, 2000);
+                }, { passive: true });
+            }
+
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                startGalleryAuto();
+                if (galleryStrip) requestAnimationFrame(tickStrip);
             }
         });
     </script>
