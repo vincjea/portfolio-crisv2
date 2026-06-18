@@ -13,6 +13,26 @@
 
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 
+    <!--
+        Restore saved theme before Tailwind paints to prevent a flash.
+        Mirrors the THEMES array in the main script block below.
+    -->
+    <script>
+        (function () {
+            var map = {
+                paper:    { bg: '#f0ead6', accent: '#363636', surface: 'rgba(240,234,214,0.88)' },
+                ink:      { bg: '#363636', accent: '#f0ead6', surface: 'rgba(54,54,54,0.88)'    },
+                midnight: { bg: '#021a30', accent: '#aba7a7', surface: 'rgba(2,26,48,0.88)'     },
+                sage:     { bg: '#c8c8a9', accent: '#474747', surface: 'rgba(200,200,169,0.88)' },
+            };
+            var t = map[localStorage.getItem('bs-theme')] || map.paper;
+            var r = document.documentElement;
+            r.style.setProperty('--color-cream',   t.bg);
+            r.style.setProperty('--color-accent',  t.accent);
+            r.style.setProperty('--color-surface', t.surface);
+        })();
+    </script>
+
     <style type="text/tailwindcss">
         @font-face {
             font-family: 'Gilroy';
@@ -30,127 +50,360 @@
             font-display: swap;
         }
 
-        /* Tailwind v4 Configuration Directive */
+        /* ─── Tailwind v4 Design Tokens ──────────────────────────────── */
         @theme {
             --font-display: 'Gilroy', sans-serif;
-            --color-cream: #f0ead6;
-            --color-accent: oklch(0.25 0.05 68.26);
+            --color-cream:  #f0ead6;  /* page bg — overridden per theme by JS */
+            --color-accent: #363636;  /* ink / text / CTAs — overridden per theme */
         }
 
-        html {
-            scroll-behavior: smooth;
+        /* Surface token: used via var() only, not as a Tailwind utility */
+        :root {
+            --color-surface: rgba(240, 234, 214, 0.88);
         }
 
-        /* Enforce Gilroy layout rules */
-        h1, h2, h3, .font-display {
-            font-family: var(--font-display) !important;
-        }
+        html { scroll-behavior: smooth; }
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
+        /* ─── Font Enforcement ───────────────────────────────────────── */
+        h1, h2, h3, .font-display { font-family: var(--font-display) !important; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-        /* Core Animation Keyframes */
+        /* ─── Keyframes ──────────────────────────────────────────────── */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(24px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes fadeIn {
             from { opacity: 0; }
-            to { opacity: 1; }
+            to   { opacity: 1; }
         }
 
-        /* Scroll Interaction Layout Reveal Transitions */
+        /* ─── Global Color Transitions (theme switching) ─────────────── */
+        /*
+            Only targets semantic elements; excludes .reveal so its motion
+            transition (opacity + transform) isn't overridden by this rule.
+            Color transitions for .reveal elements are merged into .reveal below.
+        */
+        html, body, header, section, footer,
+        h1, h2, h3, p, figcaption, span, a, button {
+            transition:
+                color            500ms ease-in-out,
+                background-color 500ms ease-in-out,
+                border-color     500ms ease-in-out;
+        }
+
+        /* ─── Scroll Reveal — base ───────────────────────────────────── */
+        /*
+            Color transitions are merged here so theme changes still animate
+            on .reveal elements (which override the global rule above via
+            higher specificity).
+        */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.32, 1), 
-                        transform 1.2s cubic-bezier(0.16, 1, 0.32, 1);
+            transition:
+                opacity          1.2s  cubic-bezier(0.16, 1, 0.32, 1),
+                transform        1.2s  cubic-bezier(0.16, 1, 0.32, 1),
+                color            500ms ease-in-out,
+                background-color 500ms ease-in-out,
+                border-color     500ms ease-in-out;
             will-change: transform, opacity;
         }
-
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Safe Dynamic Navigation Switching Flags */
+        /* ─── Phase 2 — Image Micro-Animation ───────────────────────── */
+        /*
+            .img-zoom lives inside an overflow-hidden wrapper, so the subtle
+            scale starting at 1.04 is clipped at the rounded frame edge.
+            The scale settles to 1.0 once the parent figure becomes .active.
+        */
+        figure.reveal .img-zoom {
+            transform: scale(1.04);
+            transition:
+                transform        1.6s  cubic-bezier(0.16, 1, 0.32, 1),
+                background-color 500ms ease-in-out;
+            will-change: transform;
+        }
+        figure.reveal.active .img-zoom {
+            transform: scale(1.0);
+        }
+        /* Subtle hover scale once the reveal has settled */
+        figure.reveal.active .img-zoom:hover {
+            transform: scale(1.02);
+        }
+
+        /* ─── Reduced Motion Overrides ───────────────────────────────── */
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                transform: none;
+                transition:
+                    opacity          0.4s  ease,
+                    color            500ms ease-in-out,
+                    background-color 500ms ease-in-out,
+                    border-color     500ms ease-in-out;
+            }
+            figure.reveal .img-zoom,
+            figure.reveal.active .img-zoom,
+            figure.reveal.active .img-zoom:hover {
+                transform: scale(1);
+                transition: background-color 500ms ease-in-out;
+            }
+        }
+
+        /* ─── Navigation ─────────────────────────────────────────────── */
         .nav-link {
             color: var(--color-accent);
             opacity: 0.6;
-            transition: all 0.2s ease;
+            transition:
+                opacity          0.2s  ease,
+                color            500ms ease-in-out,
+                background-color 500ms ease-in-out;
         }
-        .nav-link:hover {
-            opacity: 1;
-        }
+        .nav-link:hover { opacity: 1; }
         .nav-link[data-active="true"] {
             background-color: var(--color-accent) !important;
-            color: #ffffff !important;
+            color: var(--color-cream) !important;  /* always contrasts with accent */
             opacity: 1;
+        }
+
+        /* ─── Phase 3 — Showcase Carousel ────────────────────────────── */
+        .showcase-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.0s cubic-bezier(0.16, 1, 0.32, 1);
+        }
+        .showcase-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .showcase-dot {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            opacity: 0.3;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--color-accent);
+            padding: 4px 0;
+            transition:
+                opacity 0.3s ease,
+                color   500ms ease-in-out;
+        }
+        .showcase-dot.active { opacity: 1; }
+        .showcase-dot:hover  { opacity: 0.65; }
+
+        /* ─── Phase 1 — Theme Switcher ───────────────────────────────── */
+        .theme-popover {
+            position: fixed;
+            /* Sit 8px above the trigger (trigger = 44px height at bottom-6) */
+            bottom: calc(1.5rem + 44px + 8px);
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background-color: var(--color-cream);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 999px;
+            box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.18);
+            transition:
+                opacity           220ms ease,
+                transform         220ms ease,
+                background-color  500ms ease-in-out;
+        }
+        .theme-popover.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .theme-swatch {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            flex-shrink: 0;
+            transition: transform 0.18s ease, border-color 0.2s ease;
+        }
+        .theme-swatch:hover        { transform: scale(1.12); }
+        .theme-swatch.active       { border-color: var(--color-accent); }
+        .theme-swatch:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        #theme-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--color-cream);
+            border: 1px solid rgba(128, 128, 128, 0.25);
+            cursor: pointer;
+            box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.14);
+            transition:
+                transform         0.18s ease,
+                box-shadow        0.18s ease,
+                background-color  500ms ease-in-out;
+        }
+        #theme-trigger:hover {
+            transform: scale(1.06);
+            box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.18);
+        }
+        #theme-trigger:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 3px;
         }
     </style>
 </head>
 <body class="min-h-screen bg-cream text-accent/[0.83] font-sans">
 
+    <!-- ─── Navigation ──────────────────────────────────────────────── -->
     <header class="fixed inset-x-0 top-5 z-40 flex justify-center px-2 sm:px-4">
-        <nav id="main-nav" class="flex flex-wrap items-center justify-center gap-1 sm:gap-2 rounded-full border border-accent/10 bg-white/80 px-2 py-1.5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)] backdrop-blur-xl">
-            <a href="#top" class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium" data-active="true">Home</a>
-            <a href="#work" class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium">Work</a>
-            <a href="#about" class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium">About</a>
+        <nav id="main-nav"
+             class="flex flex-wrap items-center justify-center gap-1 sm:gap-2 rounded-full border border-accent/10 px-2 py-1.5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)] backdrop-blur-xl"
+             style="background-color: var(--color-surface);">
+            <a href="#top"     class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium" data-active="true">Home</a>
+            <a href="#work"    class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium">Work</a>
+            <a href="#about"   class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium">About</a>
             <a href="#contact" class="nav-link rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-medium">Contact</a>
         </nav>
     </header>
 
+    <!-- ─── Hero ────────────────────────────────────────────────────── -->
     <section id="top" class="flex min-h-screen items-center px-6 pt-32 md:px-10">
         <div class="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-16">
-            <div class="md:col-span-7 md:col-start-1" style="animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.32, 1) forwards;">
+
+            <div class="md:col-span-7 md:col-start-1"
+                 style="animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.32, 1) forwards;">
                 <p class="font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">Bored Shutter — est. 2026</p>
                 <h1 class="mt-6 font-display text-balance text-4xl font-bold leading-[1.15] tracking-tight md:text-[3.25rem] md:leading-[1.1]">
                     Cris Bedoya - photographer and filmmaker based in Loma Linda, California.
                 </h1>
                 <div class="mt-10 flex flex-wrap items-center gap-3">
-                    <a href="#work" class="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm text-white transition-transform hover:scale-[1.03]">
+                    <a href="#work"
+                       class="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm text-cream transition-transform hover:scale-[1.03]">
                         See the work <span aria-hidden="true">›</span>
                     </a>
-                    <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-accent/20 px-5 py-2 text-sm transition-colors hover:border-accent">
+                    <a href="#contact"
+                       class="inline-flex items-center gap-2 rounded-full border border-accent/20 px-5 py-2 text-sm hover:border-accent">
                         Book a session
                     </a>
                 </div>
             </div>
-            <a href="#about" aria-label="About the photographer" class="group relative block md:col-span-4 md:col-start-9 md:translate-y-6" style="opacity: 0; animation: fadeIn 1s ease-out forwards; animation-delay: 0.3s;">
+
+            <a href="#about" aria-label="About the photographer"
+               class="group relative block md:col-span-4 md:col-start-9 md:translate-y-6"
+               style="opacity: 0; animation: fadeIn 1s ease-out forwards; animation-delay: 0.3s;">
                 <div class="overflow-hidden rounded-sm">
-                    <div role="img" aria-label="Portrait of the photographer" class="w-full bg-accent opacity-20 transition-all duration-[600ms] ease-out group-hover:scale-[1.04] group-hover:opacity-40" style="height: 400px;"></div>
+                    <div role="img" aria-label="Portrait of the photographer"
+                         class="w-full bg-accent opacity-20 transition-all duration-[600ms] ease-out group-hover:scale-[1.04] group-hover:opacity-40"
+                         style="height: 400px;"></div>
                 </div>
-                <div class="mt-3 flex items-center justify-between text-xs opacity-50 transition-colors group-hover:opacity-100">
+                <div class="mt-3 flex items-center justify-between text-xs opacity-50 group-hover:opacity-100">
                     <span class="font-mono uppercase tracking-[0.25em]">Portrait</span>
                     <span>About ↓</span>
                 </div>
             </a>
+
         </div>
     </section>
 
+    <!-- ─── Work ────────────────────────────────────────────────────── -->
     <section id="work" class="px-6 pt-32 md:px-10 md:pt-48">
         <div class="mx-auto max-w-6xl">
+
             <div class="reveal mb-16">
                 <p class="font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">01 — Featured work</p>
                 <h2 class="mt-4 font-display text-3xl font-bold tracking-tight md:text-5xl">Recent projects</h2>
             </div>
-            
-            <figure class="reveal mb-24 w-full">
-                <div class="overflow-hidden rounded-sm">
-                    <div role="img" aria-label="Hero Showcase" class="w-full bg-accent opacity-10 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]" style="height: 500px;"></div>
-                </div>
-                <figcaption class="mt-3 flex justify-between text-xs opacity-50">
-                    <span>title</span>
-                    <span>format-date</span>
-                </figcaption>
-            </figure>
 
+            <!-- ─── Phase 3: 4-Image Revolving Showcase ───────────────── -->
+            <div id="showcase"
+                 class="reveal mb-24 w-full"
+                 role="region"
+                 aria-label="Portfolio showcase"
+                 aria-roledescription="carousel">
+
+                <!-- Slide track — overflow-hidden clips cross-fading slides -->
+                <div class="overflow-hidden rounded-sm" style="height: 500px;">
+                    <div class="relative w-full h-full">
+
+                        <div class="showcase-slide active"
+                             data-index="0"
+                             aria-label="Slide 1 of 4"
+                             aria-hidden="false">
+                            <div class="w-full h-full flex items-end p-8" style="background: #363636;">
+                                <span class="font-mono text-[11px] tracking-[0.3em]" style="color: #aba7a7;">01</span>
+                            </div>
+                        </div>
+
+                        <div class="showcase-slide"
+                             data-index="1"
+                             aria-label="Slide 2 of 4"
+                             aria-hidden="true">
+                            <div class="w-full h-full flex items-end p-8" style="background: #474747;">
+                                <span class="font-mono text-[11px] tracking-[0.3em]" style="color: #aba7a7;">02</span>
+                            </div>
+                        </div>
+
+                        <div class="showcase-slide"
+                             data-index="2"
+                             aria-label="Slide 3 of 4"
+                             aria-hidden="true">
+                            <div class="w-full h-full flex items-end p-8" style="background: #021a30;">
+                                <span class="font-mono text-[11px] tracking-[0.3em]" style="color: #aba7a7;">03</span>
+                            </div>
+                        </div>
+
+                        <div class="showcase-slide"
+                             data-index="3"
+                             aria-label="Slide 4 of 4"
+                             aria-hidden="true">
+                            <div class="w-full h-full flex items-end p-8" style="background: #aba7a7;">
+                                <span class="font-mono text-[11px] tracking-[0.3em]" style="color: #363636;">04</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Slide indicators -->
+                <div class="mt-3 flex items-center justify-between">
+                    <nav class="flex gap-5" aria-label="Showcase slide navigation">
+                        <button class="showcase-dot active" data-target="0" aria-label="Go to slide 1">01</button>
+                        <button class="showcase-dot"        data-target="1" aria-label="Go to slide 2">02</button>
+                        <button class="showcase-dot"        data-target="2" aria-label="Go to slide 3">03</button>
+                        <button class="showcase-dot"        data-target="3" aria-label="Go to slide 4">04</button>
+                    </nav>
+                    <span class="font-mono text-xs opacity-40"
+                          id="showcase-status"
+                          aria-live="polite">01 / 04</span>
+                </div>
+            </div>
+
+            <!-- ─── Project Figures (Phase 2: .img-zoom on inner placeholder) -->
             <div class="space-y-28">
+
                 <figure class="reveal w-full md:w-10/12">
                     <div class="overflow-hidden rounded-sm">
-                        <div role="img" aria-label="Project 2" class="w-full bg-accent opacity-10 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]" style="height: 450px;"></div>
+                        <div role="img" aria-label="Project 2"
+                             class="img-zoom w-full bg-accent opacity-10"
+                             style="height: 450px;"></div>
                     </div>
                     <figcaption class="mt-3 flex justify-between text-xs opacity-50">
                         <span>title</span>
@@ -160,7 +413,9 @@
 
                 <figure class="reveal w-full md:w-10/12 md:ml-auto">
                     <div class="overflow-hidden rounded-sm">
-                        <div role="img" aria-label="Project 3" class="w-full bg-accent opacity-10 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]" style="height: 450px;"></div>
+                        <div role="img" aria-label="Project 3"
+                             class="img-zoom w-full bg-accent opacity-10"
+                             style="height: 450px;"></div>
                     </div>
                     <figcaption class="mt-3 flex justify-between text-xs opacity-50">
                         <span>title</span>
@@ -170,17 +425,21 @@
 
                 <figure class="reveal w-full md:w-10/12">
                     <div class="overflow-hidden rounded-sm">
-                        <div role="img" aria-label="Project 4" class="w-full bg-accent opacity-10 transition-transform duration-[1200ms] ease-out hover:scale-[1.02]" style="height: 450px;"></div>
+                        <div role="img" aria-label="Project 4"
+                             class="img-zoom w-full bg-accent opacity-10"
+                             style="height: 450px;"></div>
                     </div>
                     <figcaption class="mt-3 flex justify-between text-xs opacity-50">
                         <span>title</span>
                         <span>format-date</span>
                     </figcaption>
                 </figure>
+
             </div>
         </div>
     </section>
 
+    <!-- ─── About ───────────────────────────────────────────────────── -->
     <section id="about" class="px-6 pt-40 md:px-10 md:pt-56">
         <div class="mx-auto max-w-3xl">
             <p class="reveal font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">02 — About</p>
@@ -208,21 +467,30 @@
         </div>
     </section>
 
+    <!-- ─── Contact ─────────────────────────────────────────────────── -->
     <section id="contact" class="px-6 pt-40 pb-32 md:px-10 md:pt-56">
         <div class="mx-auto max-w-4xl">
             <p class="reveal font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">03 — Contact</p>
             <h2 class="reveal mt-6 font-display text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl">Still bored?</h2>
-            <a href="mailto:your@email.com" class="reveal mt-10 inline-block text-xl font-medium tracking-tight underline decoration-accent/20 underline-offset-[8px] transition-colors hover:decoration-accent md:text-3xl">
-              your@email.com
+            <a href="mailto:your@email.com"
+               class="reveal mt-10 inline-block text-xl font-medium tracking-tight underline decoration-accent/20 underline-offset-[8px] hover:decoration-accent md:text-3xl">
+                your@email.com
             </a>
             <div class="reveal mt-16 flex flex-wrap gap-x-8 gap-y-3 text-sm">
-                <a href="https://www.instagram.com/bored.shutter/" target="_blank" rel="noreferrer noopener" class="group inline-flex items-center gap-2 transition-opacity hover:opacity-60"><span>Instagram</span><span class="text-xs">[@bored.shutter]</span></a>
-                <a href="https://vimeo.com" target="_blank" rel="noreferrer noopener" class="group inline-flex items-center gap-2 transition-opacity hover:opacity-60"><span>Vimeo</span><span class="text-xs">[Boredshutter]</span></a>
+                <a href="https://www.instagram.com/bored.shutter/" target="_blank" rel="noreferrer noopener"
+                   class="group inline-flex items-center gap-2 hover:opacity-60">
+                    <span>Instagram</span><span class="text-xs">[@bored.shutter]</span>
+                </a>
+                <a href="https://vimeo.com" target="_blank" rel="noreferrer noopener"
+                   class="group inline-flex items-center gap-2 hover:opacity-60">
+                    <span>Vimeo</span><span class="text-xs">[Boredshutter]</span>
+                </a>
             </div>
             <p class="reveal mt-10 text-xs opacity-60">Loma Linda, California</p>
         </div>
     </section>
 
+    <!-- ─── Footer ──────────────────────────────────────────────────── -->
     <footer class="mt-40 px-6 py-10 md:px-10">
         <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 border-t border-accent/10 pt-8 text-xs opacity-60 md:flex-row">
             <p class="font-display text-base font-bold tracking-tight">Bored Shutter</p>
@@ -230,47 +498,202 @@
         </div>
     </footer>
 
+    <!-- ─── Phase 1: Theme Switcher UI ──────────────────────────────── -->
+    <div id="theme-anchor" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+
+        <!-- Popover — floats above trigger, cross-fades open/closed -->
+        <div id="theme-popover"
+             class="theme-popover"
+             role="dialog"
+             aria-label="Color theme selection">
+            <button class="theme-swatch active"
+                    data-theme="paper"
+                    style="background: #f0ead6;"
+                    aria-label="Paper — warm cream"></button>
+            <button class="theme-swatch"
+                    data-theme="ink"
+                    style="background: #363636;"
+                    aria-label="Ink — dark charcoal"></button>
+            <button class="theme-swatch"
+                    data-theme="midnight"
+                    style="background: #021a30;"
+                    aria-label="Midnight — deep navy"></button>
+            <button class="theme-swatch"
+                    data-theme="sage"
+                    style="background: #c8c8a9;"
+                    aria-label="Sage — muted sand"></button>
+        </div>
+
+        <!-- Trigger button -->
+        <button id="theme-trigger"
+                aria-label="Open theme switcher"
+                aria-expanded="false"
+                aria-controls="theme-popover">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.15em; color:var(--color-accent); opacity:0.6;"
+                  aria-hidden="true">◑</span>
+        </button>
+
+    </div>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // --- 1. Reveal Scroll Animation Logic ---
-            const revealElements = document.querySelectorAll(".reveal");
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // ═══════════════════════════════════════════════════════════════
+            // PHASE 1 — Theme System
+            // ═══════════════════════════════════════════════════════════════
+
+            const THEMES = [
+                { name: 'paper',    bg: '#f0ead6', accent: '#363636', surface: 'rgba(240,234,214,0.88)' },
+                { name: 'ink',      bg: '#363636', accent: '#f0ead6', surface: 'rgba(54,54,54,0.88)'    },
+                { name: 'midnight', bg: '#021a30', accent: '#aba7a7', surface: 'rgba(2,26,48,0.88)'     },
+                { name: 'sage',     bg: '#c8c8a9', accent: '#474747', surface: 'rgba(200,200,169,0.88)' },
+            ];
+
+            /** Writes CSS custom properties to :root; all Tailwind utilities
+             *  that reference --color-cream / --color-accent update instantly. */
+            function applyTheme(theme) {
+                const root = document.documentElement;
+                root.style.setProperty('--color-cream',   theme.bg);
+                root.style.setProperty('--color-accent',  theme.accent);
+                root.style.setProperty('--color-surface', theme.surface);
+                localStorage.setItem('bs-theme', theme.name);
+
+                document.querySelectorAll('.theme-swatch').forEach(s => {
+                    s.classList.toggle('active', s.dataset.theme === theme.name);
+                });
+            }
+
+            // Restore persisted theme (inline script already ran, but this
+            // also marks the correct swatch as .active on DOMContentLoaded)
+            const saved = THEMES.find(t => t.name === localStorage.getItem('bs-theme')) || THEMES[0];
+            applyTheme(saved);
+
+            const trigger = document.getElementById('theme-trigger');
+            const popover = document.getElementById('theme-popover');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const opening = !popover.classList.contains('open');
+                popover.classList.toggle('open', opening);
+                trigger.setAttribute('aria-expanded', String(opening));
+            });
+
+            // Close on any outside click
+            document.addEventListener('click', () => {
+                popover.classList.remove('open');
+                trigger.setAttribute('aria-expanded', 'false');
+            });
+
+            // Prevent the above from firing when clicking inside the popover
+            popover.addEventListener('click', e => e.stopPropagation());
+
+            document.querySelectorAll('.theme-swatch').forEach(swatch => {
+                swatch.addEventListener('click', () => {
+                    const theme = THEMES.find(t => t.name === swatch.dataset.theme);
+                    if (!theme) return;
+                    applyTheme(theme);
+                    // Brief delay lets the user see the theme change before closing
+                    setTimeout(() => {
+                        popover.classList.remove('open');
+                        trigger.setAttribute('aria-expanded', 'false');
+                    }, 320);
+                });
+            });
+
+
+            // ═══════════════════════════════════════════════════════════════
+            // PHASE 2 — Scroll Reveal
+            // (.img-zoom scale animation is pure CSS; this just toggles .active)
+            // ═══════════════════════════════════════════════════════════════
+
             const revealObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add("active");
+                        entry.target.classList.add('active');
                         observer.unobserve(entry.target);
                     }
                 });
-            }, { root: null, threshold: 0.05, rootMargin: "0px 0px -20px 0px" });
+            }, { root: null, threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
 
-            revealElements.forEach(element => revealObserver.observe(element));
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-            // --- 2. Dynamic Nav Tracking Logic (Fixed for tall sections) ---
-            const sections = document.querySelectorAll("section");
-            const navLinks = document.querySelectorAll(".nav-link");
 
-            const navObserverOptions = {
-                root: null,
-                threshold: 0,
-                rootMargin: "-50% 0px -50% 0px" 
-            };
+            // ═══════════════════════════════════════════════════════════════
+            // Navigation active-section tracking
+            // ═══════════════════════════════════════════════════════════════
+
+            const navLinks = document.querySelectorAll('.nav-link');
 
             const navObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        const activeId = entry.target.getAttribute("id");
+                        const id = entry.target.getAttribute('id');
                         navLinks.forEach(link => {
-                            if (link.getAttribute("href") === `#${activeId}`) {
-                                link.setAttribute("data-active", "true");
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.setAttribute('data-active', 'true');
                             } else {
-                                link.removeAttribute("data-active");
+                                link.removeAttribute('data-active');
                             }
                         });
                     }
                 });
-            }, navObserverOptions);
+            }, { root: null, threshold: 0, rootMargin: '-50% 0px -50% 0px' });
 
-            sections.forEach(section => navObserver.observe(section));
+            document.querySelectorAll('section').forEach(s => navObserver.observe(s));
+
+
+            // ═══════════════════════════════════════════════════════════════
+            // PHASE 3 — Revolving Showcase
+            // ═══════════════════════════════════════════════════════════════
+
+            const slides   = document.querySelectorAll('.showcase-slide');
+            const dots     = document.querySelectorAll('.showcase-dot');
+            const statusEl = document.getElementById('showcase-status');
+            let current   = 0;
+            let autoTimer = null;
+
+            /** Cross-fades to slide index n, wrapping around. */
+            function goTo(n) {
+                slides[current].classList.remove('active');
+                slides[current].setAttribute('aria-hidden', 'true');
+                dots[current].classList.remove('active');
+
+                current = ((n % slides.length) + slides.length) % slides.length;
+
+                slides[current].classList.add('active');
+                slides[current].setAttribute('aria-hidden', 'false');
+                dots[current].classList.add('active');
+
+                statusEl.textContent = `${String(current + 1).padStart(2, '0')} / 04`;
+            }
+
+            function startAuto() {
+                stopAuto();
+                autoTimer = setInterval(() => goTo(current + 1), 6000);
+            }
+
+            function stopAuto() {
+                if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+            }
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    stopAuto();
+                    goTo(Number(dot.dataset.target));
+                    startAuto();
+                });
+            });
+
+            const showcase = document.getElementById('showcase');
+            if (showcase) {
+                showcase.addEventListener('mouseenter', stopAuto);
+                showcase.addEventListener('mouseleave', startAuto);
+            }
+
+            // No auto-advance if user prefers reduced motion
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                startAuto();
+            }
         });
     </script>
 </body>
