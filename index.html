@@ -183,36 +183,6 @@
             opacity: 1;
         }
 
-        /* ─── Phase 3 — Showcase Carousel ────────────────────────────── */
-        .showcase-slide {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 1.0s cubic-bezier(0.16, 1, 0.32, 1);
-        }
-        .showcase-slide.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .showcase-dot {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            opacity: 0.3;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: var(--color-accent);
-            padding: 4px 0;
-            transition:
-                opacity 0.3s ease,
-                color   500ms ease-in-out;
-        }
-        .showcase-dot.active { opacity: 1; }
-        .showcase-dot:hover  { opacity: 0.65; }
-
         /* ─── Gallery — Featured Viewer + Thumbnail Strip ────────────── */
 
         /*
@@ -448,129 +418,10 @@
                 <h2 class="mt-4 font-display text-3xl font-bold tracking-tight md:text-5xl">Recent projects</h2>
             </div>
 
-            <!-- ─── Phase 3: 4-Image Revolving Showcase ───────────────── -->
-            <div id="showcase"
-                 class="reveal mb-24 w-full"
-                 role="region"
-                 aria-label="Portfolio showcase"
-                 aria-roledescription="carousel">
+            <!-- ─── Gallery — Featured Viewer + Thumbnail Selector ─────── -->
+            <div class="reveal mb-24 w-full">
 
-                <!-- Slide track — overflow-hidden clips cross-fading slides -->
-                <div class="overflow-hidden rounded-sm" style="height: 500px;">
-                    <div class="relative w-full h-full">
-
-                        <div class="showcase-slide active"
-                             data-index="0"
-                             aria-label="Slide 1 of 4"
-                             aria-hidden="false">
-                            <div class="w-full h-full flex items-end p-8" style="background: #363636;">
-                                <span class="font-mono text-[11px] tracking-[0.3em]" style="color: #aba7a7;">01</span>
-                            </div>
-                        </div>
-
-                        <div class="showcase-slide"
-                             data-index="1"
-                             aria-label="Slide 2 of 4"
-                             aria-hidden="true">
-                            <div class="w-full h-full flex items-end p-8" style="background: #474747;">
-                                <span class="font-mono text-[11px] tracking-[0.3em]" style="color: #aba7a7;">02</span>
-                            </div>
-                        </div>
-
-                        <div class="showcase-slide"
-                             data-index="2"
-                             aria-label="Slide 3 of 4"
-                             aria-hidden="true">
-                            <div class="w-full h-full flex items-end p-8" style="background: #021a30;">
-                                <span class="font-mono text-[11px] tracking-[0.3em]" style="color: #aba7a7;">03</span>
-                            </div>
-                        </div>
-
-                        <div class="showcase-slide"
-                             data-index="3"
-                             aria-label="Slide 4 of 4"
-                             aria-hidden="true">
-                            <div class="w-full h-full flex items-end p-8" style="background: #aba7a7;">
-                                <span class="font-mono text-[11px] tracking-[0.3em]" style="color: #363636;">04</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- Slide indicators -->
-                <div class="mt-3 flex items-center justify-between">
-                    <nav class="flex gap-5" aria-label="Showcase slide navigation">
-                        <button class="showcase-dot active" data-target="0" aria-label="Go to slide 1">01</button>
-                        <button class="showcase-dot"        data-target="1" aria-label="Go to slide 2">02</button>
-                        <button class="showcase-dot"        data-target="2" aria-label="Go to slide 3">03</button>
-                        <button class="showcase-dot"        data-target="3" aria-label="Go to slide 4">04</button>
-                    </nav>
-                    <span class="font-mono text-xs opacity-40"
-                          id="showcase-status"
-                          aria-live="polite">01 / 04</span>
-                </div>
-            </div>
-
-            <!-- ─── Project Figures (Phase 2: .img-zoom on inner placeholder) -->
-            <div class="space-y-28">
-
-                <figure class="reveal w-full md:w-10/12">
-                    <div class="overflow-hidden rounded-sm">
-                        <div role="img" aria-label="Project 2"
-                             class="img-zoom w-full bg-accent opacity-10"
-                             style="height: 450px;"></div>
-                    </div>
-                    <figcaption class="mt-3 flex justify-between text-xs opacity-50">
-                        <span>title</span>
-                        <span>format-date</span>
-                    </figcaption>
-                </figure>
-
-                <figure class="reveal w-full md:w-10/12 md:ml-auto">
-                    <div class="overflow-hidden rounded-sm">
-                        <div role="img" aria-label="Project 3"
-                             class="img-zoom w-full bg-accent opacity-10"
-                             style="height: 450px;"></div>
-                    </div>
-                    <figcaption class="mt-3 flex justify-between text-xs opacity-50">
-                        <span>title</span>
-                        <span>format-date</span>
-                    </figcaption>
-                </figure>
-
-                <figure class="reveal w-full md:w-10/12">
-                    <div class="overflow-hidden rounded-sm">
-                        <div role="img" aria-label="Project 4"
-                             class="img-zoom w-full bg-accent opacity-10"
-                             style="height: 450px;"></div>
-                    </div>
-                    <figcaption class="mt-3 flex justify-between text-xs opacity-50">
-                        <span>title</span>
-                        <span>format-date</span>
-                    </figcaption>
-                </figure>
-
-            </div>
-
-            <!-- ─── Gallery: Slow-Scroll Selector ──────────────────────── -->
-            <!--
-                8 placeholder slots share one featured viewer via cross-fade.
-                The thumbnail strip slow-scrolls automatically and pauses on
-                hover/touch; clicking any thumb selects that image.
-            -->
-            <div class="reveal mt-48">
-
-                <!-- Header row -->
-                <div class="mb-6 flex items-baseline justify-between">
-                    <p class="font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">Gallery</p>
-                    <span class="font-mono text-xs opacity-40"
-                          id="gallery-status"
-                          aria-live="polite"
-                          aria-label="Current image position">01 / 08</span>
-                </div>
-
-                <!-- Featured viewer — explicit height lets all slots be absolute -->
+                <!-- Featured viewer: all slots absolute-stacked, clips scale/blur transitions -->
                 <div class="gallery-main-wrap mb-3"
                      style="height: 520px;"
                      aria-label="Featured gallery image"
@@ -619,47 +470,97 @@
 
                 </div>
 
-                <!-- Thumbnail strip — horizontally scrollable, auto-drifts slowly -->
+                <!-- Position counter + scrollable thumbnail strip -->
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-mono text-[10px] opacity-30 uppercase tracking-[0.25em]">Select</span>
+                    <span class="font-mono text-xs opacity-40"
+                          id="gallery-status"
+                          aria-live="polite"
+                          aria-label="Current image">01 / 08</span>
+                </div>
+
                 <div id="gallery-strip"
                      class="gallery-strip flex gap-2"
                      role="listbox"
                      aria-label="Select an image from the gallery">
 
                     <button class="gallery-thumb active" data-gi="0" role="option" aria-selected="true"  aria-label="Image 1 of 8">
-                        <div style="width:140px;height:88px;background:#363636;"></div>
+                        <div style="width:220px;height:138px;background:#363636;"></div>
                         <div class="gallery-thumb-bar" aria-hidden="true"></div>
                     </button>
                     <button class="gallery-thumb" data-gi="1" role="option" aria-selected="false" aria-label="Image 2 of 8">
-                        <div style="width:140px;height:88px;background:#021a30;"></div>
+                        <div style="width:220px;height:138px;background:#021a30;"></div>
                         <div class="gallery-thumb-bar" aria-hidden="true"></div>
                     </button>
                     <button class="gallery-thumb" data-gi="2" role="option" aria-selected="false" aria-label="Image 3 of 8">
-                        <div style="width:140px;height:88px;background:#474747;"></div>
+                        <div style="width:220px;height:138px;background:#474747;"></div>
                         <div class="gallery-thumb-bar" aria-hidden="true"></div>
                     </button>
                     <button class="gallery-thumb" data-gi="3" role="option" aria-selected="false" aria-label="Image 4 of 8">
-                        <div style="width:140px;height:88px;background:#aba7a7;"></div>
+                        <div style="width:220px;height:138px;background:#aba7a7;"></div>
                         <div class="gallery-thumb-bar" aria-hidden="true"></div>
                     </button>
                     <button class="gallery-thumb" data-gi="4" role="option" aria-selected="false" aria-label="Image 5 of 8">
-                        <div style="width:140px;height:88px;background:#363636;"></div>
+                        <div style="width:220px;height:138px;background:#363636;"></div>
                         <div class="gallery-thumb-bar" aria-hidden="true"></div>
                     </button>
                     <button class="gallery-thumb" data-gi="5" role="option" aria-selected="false" aria-label="Image 6 of 8">
-                        <div style="width:140px;height:88px;background:#c8c8a9;"></div>
+                        <div style="width:220px;height:138px;background:#c8c8a9;"></div>
                         <div class="gallery-thumb-bar" aria-hidden="true"></div>
                     </button>
                     <button class="gallery-thumb" data-gi="6" role="option" aria-selected="false" aria-label="Image 7 of 8">
-                        <div style="width:140px;height:88px;background:#021a30;"></div>
+                        <div style="width:220px;height:138px;background:#021a30;"></div>
                         <div class="gallery-thumb-bar" aria-hidden="true"></div>
                     </button>
                     <button class="gallery-thumb" data-gi="7" role="option" aria-selected="false" aria-label="Image 8 of 8">
-                        <div style="width:140px;height:88px;background:#474747;"></div>
+                        <div style="width:220px;height:138px;background:#474747;"></div>
                         <div class="gallery-thumb-bar" aria-hidden="true"></div>
                     </button>
 
                 </div>
             </div>
+
+            <!-- ─── Project Figures (Phase 2: .img-zoom on inner placeholder) -->
+            <div class="space-y-28">
+
+                <figure class="reveal w-full md:w-10/12">
+                    <div class="overflow-hidden rounded-sm">
+                        <div role="img" aria-label="Project 2"
+                             class="img-zoom w-full bg-accent opacity-10"
+                             style="height: 450px;"></div>
+                    </div>
+                    <figcaption class="mt-3 flex justify-between text-xs opacity-50">
+                        <span>title</span>
+                        <span>format-date</span>
+                    </figcaption>
+                </figure>
+
+                <figure class="reveal w-full md:w-10/12 md:ml-auto">
+                    <div class="overflow-hidden rounded-sm">
+                        <div role="img" aria-label="Project 3"
+                             class="img-zoom w-full bg-accent opacity-10"
+                             style="height: 450px;"></div>
+                    </div>
+                    <figcaption class="mt-3 flex justify-between text-xs opacity-50">
+                        <span>title</span>
+                        <span>format-date</span>
+                    </figcaption>
+                </figure>
+
+                <figure class="reveal w-full md:w-10/12">
+                    <div class="overflow-hidden rounded-sm">
+                        <div role="img" aria-label="Project 4"
+                             class="img-zoom w-full bg-accent opacity-10"
+                             style="height: 450px;"></div>
+                    </div>
+                    <figcaption class="mt-3 flex justify-between text-xs opacity-50">
+                        <span>title</span>
+                        <span>format-date</span>
+                    </figcaption>
+                </figure>
+
+            </div>
+
 
         </div>
     </section>
@@ -868,75 +769,20 @@
 
 
             // ═══════════════════════════════════════════════════════════════
-            // PHASE 3 — Revolving Showcase
-            // ═══════════════════════════════════════════════════════════════
-
-            const slides   = document.querySelectorAll('.showcase-slide');
-            const dots     = document.querySelectorAll('.showcase-dot');
-            const statusEl = document.getElementById('showcase-status');
-            let current   = 0;
-            let autoTimer = null;
-
-            /** Cross-fades to slide index n, wrapping around. */
-            function goTo(n) {
-                slides[current].classList.remove('active');
-                slides[current].setAttribute('aria-hidden', 'true');
-                dots[current].classList.remove('active');
-
-                current = ((n % slides.length) + slides.length) % slides.length;
-
-                slides[current].classList.add('active');
-                slides[current].setAttribute('aria-hidden', 'false');
-                dots[current].classList.add('active');
-
-                statusEl.textContent = `${String(current + 1).padStart(2, '0')} / 04`;
-            }
-
-            function startAuto() {
-                stopAuto();
-                autoTimer = setInterval(() => goTo(current + 1), 6000);
-            }
-
-            function stopAuto() {
-                if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
-            }
-
-            dots.forEach(dot => {
-                dot.addEventListener('click', () => {
-                    stopAuto();
-                    goTo(Number(dot.dataset.target));
-                    startAuto();
-                });
-            });
-
-            const showcase = document.getElementById('showcase');
-            if (showcase) {
-                showcase.addEventListener('mouseenter', stopAuto);
-                showcase.addEventListener('mouseleave', startAuto);
-            }
-
-            // No auto-advance if user prefers reduced motion
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                startAuto();
-            }
-
-
-            // ═══════════════════════════════════════════════════════════════
-            // Gallery — Featured Viewer + Slow-Scroll Thumbnail Strip
+            // Gallery — Featured Viewer + Manual Thumbnail Selector
+            // No auto-advance, no strip drift — user scrolls and selects.
             // ═══════════════════════════════════════════════════════════════
 
             const gallerySlots  = document.querySelectorAll('.gallery-slot');
             const galleryThumbs = document.querySelectorAll('.gallery-thumb');
             const galleryStatus = document.getElementById('gallery-status');
-            const galleryStrip  = document.getElementById('gallery-strip');
             const GALLERY_COUNT = gallerySlots.length;
-            let activeGI      = 0;
-            let galleryTimer  = null;
+            let activeGI = 0;
 
             /**
              * Cross-fades from activeGI to index.
-             * The exiting slot gets .exit (scale-down + blur) at z:2 so its
-             * blur bridges the seam as the entering slot fades in underneath.
+             * Exiting slot blurs out at z:2 (blur-bridge technique);
+             * entering slot fades in at z:1 beneath it.
              */
             function selectGallery(index) {
                 const next = ((index % GALLERY_COUNT) + GALLERY_COUNT) % GALLERY_COUNT;
@@ -962,70 +808,11 @@
                     galleryStatus.textContent =
                         `${String(activeGI + 1).padStart(2, '0')} / ${String(GALLERY_COUNT).padStart(2, '0')}`;
                 }
-
-                // Keep selected thumb visible without fighting auto-scroll
-                galleryThumbs[activeGI]?.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'nearest',
-                    inline: 'center',
-                });
             }
 
             galleryThumbs.forEach((thumb, i) => {
-                thumb.addEventListener('click', () => {
-                    stopGalleryAuto();
-                    selectGallery(i);
-                    startGalleryAuto();
-                });
+                thumb.addEventListener('click', () => selectGallery(i));
             });
-
-            function startGalleryAuto() {
-                stopGalleryAuto();
-                galleryTimer = setInterval(() => selectGallery(activeGI + 1), 6000);
-            }
-            function stopGalleryAuto() {
-                if (galleryTimer) { clearInterval(galleryTimer); galleryTimer = null; }
-            }
-
-            // Pause auto-advance on hover/focus within the gallery
-            const galleryWrap = galleryStrip?.closest('.reveal');
-            if (galleryWrap) {
-                galleryWrap.addEventListener('mouseenter', stopGalleryAuto);
-                galleryWrap.addEventListener('mouseleave', startGalleryAuto);
-            }
-
-            // ── Slow-scroll the thumbnail strip via rAF ──────────────────
-            // Uses direct .scrollLeft writes (not CSS vars) to avoid cascaded
-            // style recalculation on all strip children per the perf rules.
-            let stripDrifting = true;
-            const STRIP_SPEED = 0.32; // px per frame — cinematic pace
-
-            function tickStrip() {
-                if (stripDrifting && galleryStrip) {
-                    galleryStrip.scrollLeft += STRIP_SPEED;
-                    // Soft loop back to 0 when fully scrolled
-                    if (galleryStrip.scrollLeft >=
-                            galleryStrip.scrollWidth - galleryStrip.clientWidth) {
-                        galleryStrip.scrollLeft = 0;
-                    }
-                }
-                requestAnimationFrame(tickStrip);
-            }
-
-            if (galleryStrip) {
-                galleryStrip.addEventListener('mouseenter',  () => { stripDrifting = false; });
-                galleryStrip.addEventListener('mouseleave',  () => { stripDrifting = true;  });
-                galleryStrip.addEventListener('touchstart',  () => { stripDrifting = false; }, { passive: true });
-                // Resume drift 2s after touch ends to let the user make their tap
-                galleryStrip.addEventListener('touchend',    () => {
-                    setTimeout(() => { stripDrifting = true; }, 2000);
-                }, { passive: true });
-            }
-
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                startGalleryAuto();
-                if (galleryStrip) requestAnimationFrame(tickStrip);
-            }
         });
     </script>
 </body>
