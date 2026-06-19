@@ -435,14 +435,9 @@
             to   { transform: rotate(360deg); }
         }
 
-        /* Inner blade pivot — CLOSED default, opens when wrapper gets .is-open */
+        /* Blade paths — JS sets transform directly; CSS smooths the transition */
         .iris-blade {
-            transform-origin: 40px 40px;
-            transform: rotate(0deg);
             transition: transform 1.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .shutter-iris-wrap.is-open .iris-blade {
-            transform: rotate(28deg);
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -710,36 +705,12 @@
                         <svg viewBox="0 0 80 80" fill="none" style="width:100%;height:100%;">
                             <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.8"/>
                             <g class="shutter-iris">
-                                <g style="transform-origin:40px 40px;transform:rotate(0deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(60deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(120deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(180deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(240deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(300deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
+                                <path class="iris-blade" data-base="0"   fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="60"  fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="120" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="180" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="240" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="300" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
                             </g>
                             <circle cx="40" cy="40" r="4" stroke="currentColor" stroke-width="0.8"/>
                         </svg>
@@ -762,36 +733,12 @@
                         <svg viewBox="0 0 80 80" fill="none" style="width:100%;height:100%;">
                             <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.8"/>
                             <g class="shutter-iris">
-                                <g style="transform-origin:40px 40px;transform:rotate(0deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(60deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(120deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(180deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(240deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(300deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
+                                <path class="iris-blade" data-base="0"   fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="60"  fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="120" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="180" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="240" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="300" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
                             </g>
                             <circle cx="40" cy="40" r="4" stroke="currentColor" stroke-width="0.8"/>
                         </svg>
@@ -814,36 +761,12 @@
                         <svg viewBox="0 0 80 80" fill="none" style="width:100%;height:100%;">
                             <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.8"/>
                             <g class="shutter-iris">
-                                <g style="transform-origin:40px 40px;transform:rotate(0deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(60deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(120deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(180deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(240deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
-                                <g style="transform-origin:40px 40px;transform:rotate(300deg);">
-                                    <g class="iris-blade" style="transform-origin:40px 40px;">
-                                        <path fill="currentColor" d="M 40 40 C 22 38,10 24,22 8.8 A 36 36 0 0 1 58 8.8 C 56 24,46 34,40 40 Z"/>
-                                    </g>
-                                </g>
+                                <path class="iris-blade" data-base="0"   fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="60"  fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="120" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="180" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="240" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
+                                <path class="iris-blade" data-base="300" fill="currentColor" d="M 40 40 C 28 38,16 22,22 8.8 A 36 36 0 0 1 58 8.8 C 64 22,52 38,40 40 Z"/>
                             </g>
                             <circle cx="40" cy="40" r="4" stroke="currentColor" stroke-width="0.8"/>
                         </svg>
@@ -1114,19 +1037,35 @@
                 galleryStrip?.scrollTo({ left: galleryStrip.scrollWidth, behavior: 'smooth' });
             });
 
-            // Iris open when centered in viewport, closed otherwise
-            const irisWraps = document.querySelectorAll('.shutter-iris-wrap');
-            if (irisWraps.length) {
-                const irisObserver = new IntersectionObserver(entries => {
-                    entries.forEach(entry => {
-                        entry.target.classList.toggle('is-open', entry.isIntersecting);
+            // Iris open/close — JS sets transform directly so SVG origin is unambiguous
+            (function () {
+                const OPEN_DEG = 28;
+
+                function setIris(wrap, open) {
+                    wrap.querySelectorAll('.iris-blade').forEach(function (blade) {
+                        var base = parseInt(blade.dataset.base, 10);
+                        var deg  = base + (open ? OPEN_DEG : 0);
+                        blade.style.transformOrigin = '40px 40px';
+                        blade.style.transform       = 'rotate(' + deg + 'deg)';
                     });
-                }, {
-                    rootMargin: '-30% 0px',
-                    threshold: 0.5
+                }
+
+                // Initialise all blades to closed position immediately
+                document.querySelectorAll('.shutter-iris-wrap').forEach(function (wrap) {
+                    setIris(wrap, false);
                 });
-                irisWraps.forEach(el => irisObserver.observe(el));
-            }
+
+                // Open when iris enters the middle ~60% of the viewport
+                var obs = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        setIris(entry.target, entry.isIntersecting);
+                    });
+                }, { rootMargin: '-20% 0px', threshold: 0.1 });
+
+                document.querySelectorAll('.shutter-iris-wrap').forEach(function (el) {
+                    obs.observe(el);
+                });
+            }());
 
             // Scroll-driven film strip
             const filmStripEl  = document.getElementById('film-strip-svg');
