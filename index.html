@@ -28,12 +28,12 @@
             window.scrollTo(0, 0);
 
             var map = {
-                paper:    { bg: '#f0ead6', accent: '#363636', surface: 'rgba(240,234,214,0.88)' },
-                ink:      { bg: '#363636', accent: '#f0ead6', surface: 'rgba(54,54,54,0.88)'    },
-                midnight: { bg: '#021a30', accent: '#aba7a7', surface: 'rgba(2,26,48,0.88)'     },
-                sage:     { bg: '#c8c8a9', accent: '#474747', surface: 'rgba(200,200,169,0.88)' },
+                ash:   { bg: '#c8c5c0', accent: '#26231f', surface: 'rgba(200,197,192,0.88)' },
+                ink:   { bg: '#363636', accent: '#f0ead6', surface: 'rgba(54,54,54,0.88)'    },
+                coal:  { bg: '#1a1918', accent: '#aeaaa4', surface: 'rgba(26,25,24,0.88)'    },
+                slate: { bg: '#4a4e54', accent: '#c6cad0', surface: 'rgba(74,78,84,0.88)'    },
             };
-            var t = map[localStorage.getItem('bs-theme')] || map.paper;
+            var t = map[localStorage.getItem('bs-theme')] || map.ash;
             var r = document.documentElement;
             r.style.setProperty('--color-cream',   t.bg);
             r.style.setProperty('--color-accent',  t.accent);
@@ -62,13 +62,13 @@
         @theme {
             --font-display: 'Radwave Demo', 'Gilroy', sans-serif;
             --font-body:    'Gilroy', sans-serif;
-            --color-cream:  #f0ead6;  /* page bg — overridden per theme by JS */
-            --color-accent: #363636;  /* ink / text / CTAs — overridden per theme */
+            --color-cream:  #c8c5c0;  /* page bg — overridden per theme by JS */
+            --color-accent: #26231f;  /* ink / text / CTAs — overridden per theme */
         }
 
         /* Surface token: used via var() only, not as a Tailwind utility */
         :root {
-            --color-surface: rgba(240, 234, 214, 0.88);
+            --color-surface: rgba(200, 197, 192, 0.88);
         }
 
         html { scroll-behavior: smooth; }
@@ -716,21 +716,21 @@
              role="dialog"
              aria-label="Color theme selection">
             <button class="theme-swatch active"
-                    data-theme="paper"
-                    style="background: #f0ead6;"
-                    aria-label="Paper — warm cream"></button>
+                    data-theme="ash"
+                    style="background: #c8c5c0;"
+                    aria-label="Ash — light warm gray"></button>
             <button class="theme-swatch"
                     data-theme="ink"
                     style="background: #363636;"
                     aria-label="Ink — dark charcoal"></button>
             <button class="theme-swatch"
-                    data-theme="midnight"
-                    style="background: #021a30;"
-                    aria-label="Midnight — deep navy"></button>
+                    data-theme="coal"
+                    style="background: #1a1918;"
+                    aria-label="Coal — near black"></button>
             <button class="theme-swatch"
-                    data-theme="sage"
-                    style="background: #c8c8a9;"
-                    aria-label="Sage — muted sand"></button>
+                    data-theme="slate"
+                    style="background: #4a4e54;"
+                    aria-label="Slate — cool gray"></button>
         </div>
 
         <!-- Trigger button -->
@@ -752,10 +752,10 @@
             // ═══════════════════════════════════════════════════════════════
 
             const THEMES = [
-                { name: 'paper',    bg: '#f0ead6', accent: '#363636', surface: 'rgba(240,234,214,0.88)' },
-                { name: 'ink',      bg: '#363636', accent: '#f0ead6', surface: 'rgba(54,54,54,0.88)'    },
-                { name: 'midnight', bg: '#021a30', accent: '#aba7a7', surface: 'rgba(2,26,48,0.88)'     },
-                { name: 'sage',     bg: '#c8c8a9', accent: '#474747', surface: 'rgba(200,200,169,0.88)' },
+                { name: 'ash',   bg: '#c8c5c0', accent: '#26231f', surface: 'rgba(200,197,192,0.88)' },
+                { name: 'ink',   bg: '#363636', accent: '#f0ead6', surface: 'rgba(54,54,54,0.88)'    },
+                { name: 'coal',  bg: '#1a1918', accent: '#aeaaa4', surface: 'rgba(26,25,24,0.88)'    },
+                { name: 'slate', bg: '#4a4e54', accent: '#c6cad0', surface: 'rgba(74,78,84,0.88)'    },
             ];
 
             /** Writes CSS custom properties to :root; all Tailwind utilities
@@ -774,7 +774,7 @@
 
             // Restore persisted theme (inline script already ran, but this
             // also marks the correct swatch as .active on DOMContentLoaded)
-            const saved = THEMES.find(t => t.name === localStorage.getItem('bs-theme')) || THEMES[0];
+            const saved = THEMES.find(t => t.name === localStorage.getItem('bs-theme')) || THEMES[0]; // default: ash
             applyTheme(saved);
 
             const trigger = document.getElementById('theme-trigger');
