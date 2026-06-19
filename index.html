@@ -410,71 +410,66 @@
             outline-offset: 3px;
         }
 
-        /* ─── Shutter aperture overlay ───────────────────────────────── */
-        .shutter-wrap {
+        /* ─── Iris shutter — background decoration beside figures ──────── */
+
+        /* Wrapper: absolutely positioned in the negative space beside figures */
+        .shutter-iris-wrap {
             position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            transform: translateY(-50%);
+            width: 140px;
+            height: 140px;
             pointer-events: none;
-            z-index: 5;
-        }
-        .shutter-svg {
-            width: min(260px, 46%);
-            height: min(260px, 46%);
+            opacity: 0.08;
             color: var(--color-accent);
-            opacity: 0.055;
-            transition:
-                opacity   700ms cubic-bezier(0.23, 1, 0.32, 1),
-                color     500ms ease-in-out;
+            transition: color 500ms ease-in-out;
         }
-        .shutter-blades {
+        .shutter-iris-wrap-right { right: 0; }
+        .shutter-iris-wrap-left  { left:  0; }
+
+        /* Outer iris group — continuous slow spin */
+        .shutter-iris {
             transform-origin: 40px 40px;
-            transition: transform 700ms cubic-bezier(0.23, 1, 0.32, 1);
+            animation: irisRotate 22s linear infinite;
         }
-        /* Gate hover on real pointer devices */
-        @media (hover: hover) and (pointer: fine) {
-            .gallery-main-wrap:hover .shutter-svg { opacity: 0.16; }
-            .gallery-main-wrap:hover .shutter-blades { transform: rotate(30deg); }
-            figure:hover .shutter-svg { opacity: 0.16; }
-            figure:hover .shutter-blades { transform: rotate(30deg); }
-            .group:hover .shutter-svg { opacity: 0.16; }
-            .group:hover .shutter-blades { transform: rotate(30deg); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .shutter-blades { transition: none; }
-            .shutter-svg    { transition: none; }
+        @keyframes irisRotate {
+            from { transform: rotate(0deg);   }
+            to   { transform: rotate(360deg); }
         }
 
-        /* ─── Film strip background ──────────────────────────────────── */
-        /* 27 frames × 88px = 2376px — animation ends on a pattern boundary */
-        @keyframes filmRoll {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-2376px); }
+        /* Individual blades — pulse open then close (alternate) */
+        .shutter-blade {
+            transform-origin: 40px 40px;
+            animation: irisOpen 3.5s cubic-bezier(0.23, 1, 0.32, 1) infinite alternate;
         }
+        @keyframes irisOpen {
+            from { transform: rotate(0deg);  }
+            to   { transform: rotate(28deg); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .shutter-iris, .shutter-blade { animation-play-state: paused; }
+        }
+
+        /* ─── Film strip — scroll-driven, scoped to figures area ────────── */
         .film-bg {
             position: absolute;
             left: 0; right: 0;
-            top: 52%;
+            top: 50%;
             transform: translateY(-50%);
             height: 90px;
             overflow: hidden;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.05;
+            opacity: 0.055;
             color: var(--color-accent);
             transition: color 500ms ease-in-out;
         }
         .film-strip-svg {
             position: absolute;
             top: 0; left: 0;
-            width: 4752px; /* 54 frames — double for seamless loop */
+            width: 4752px;
             height: 90px;
-            animation: filmRoll 90s linear infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .film-strip-svg { animation-play-state: paused; }
+            /* transform driven by JS scroll, no CSS animation */
         }
     </style>
 </head>
@@ -519,24 +514,10 @@
             <a href="#about" aria-label="About the photographer"
                class="group relative block md:col-span-4 md:col-start-9 md:translate-y-6"
                style="opacity: 0; animation: fadeIn 1s ease-out forwards; animation-delay: 0.3s;">
-                <div class="relative overflow-hidden rounded-sm">
+                <div class="overflow-hidden rounded-sm">
                     <div role="img" aria-label="Portrait of the photographer"
                          class="w-full bg-accent opacity-20 transition-all duration-[600ms] ease-out group-hover:scale-[1.04] group-hover:opacity-40"
                          style="height: 400px;"></div>
-                    <div class="shutter-wrap" aria-hidden="true">
-                        <svg class="shutter-svg" viewBox="0 0 80 80" fill="none">
-                            <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.75"/>
-                            <g class="shutter-blades">
-                                <line x1="40" y1="40" x2="40"   y2="4"  stroke="currentColor" stroke-width="0.75"/>
-                                <line x1="40" y1="40" x2="71.2" y2="22" stroke="currentColor" stroke-width="0.75"/>
-                                <line x1="40" y1="40" x2="71.2" y2="58" stroke="currentColor" stroke-width="0.75"/>
-                                <line x1="40" y1="40" x2="40"   y2="76" stroke="currentColor" stroke-width="0.75"/>
-                                <line x1="40" y1="40" x2="8.8"  y2="58" stroke="currentColor" stroke-width="0.75"/>
-                                <line x1="40" y1="40" x2="8.8"  y2="22" stroke="currentColor" stroke-width="0.75"/>
-                            </g>
-                            <circle cx="40" cy="40" r="8" stroke="currentColor" stroke-width="0.75"/>
-                        </svg>
-                    </div>
                 </div>
                 <div class="mt-3 flex items-center justify-between text-xs opacity-50 group-hover:opacity-100">
                     <span class="font-mono uppercase tracking-[0.25em]">Portrait</span>
@@ -548,38 +529,9 @@
     </section>
 
     <!-- ─── Work ────────────────────────────────────────────────────── -->
-    <section id="work" class="relative px-6 pt-32 md:px-10 md:pt-48">
+    <section id="work" class="px-6 pt-32 md:px-10 md:pt-48">
 
-        <!-- ─── Film strip — ambient background texture ───────────────── -->
-        <div class="film-bg" aria-hidden="true">
-            <svg class="film-strip-svg" viewBox="0 0 4752 90" preserveAspectRatio="none"
-                 fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <pattern id="film-unit" x="0" y="0" width="88" height="90"
-                             patternUnits="userSpaceOnUse">
-                        <!-- Frame border -->
-                        <rect x="8" y="16" width="72" height="58" rx="1"
-                              stroke="currentColor" stroke-width="1" fill="none"/>
-                        <!-- Top sprocket holes -->
-                        <rect x="10" y="3"  width="8" height="7" rx="1.5" fill="currentColor"/>
-                        <rect x="40" y="3"  width="8" height="7" rx="1.5" fill="currentColor"/>
-                        <rect x="70" y="3"  width="8" height="7" rx="1.5" fill="currentColor"/>
-                        <!-- Bottom sprocket holes -->
-                        <rect x="10" y="80" width="8" height="7" rx="1.5" fill="currentColor"/>
-                        <rect x="40" y="80" width="8" height="7" rx="1.5" fill="currentColor"/>
-                        <rect x="70" y="80" width="8" height="7" rx="1.5" fill="currentColor"/>
-                        <!-- Edge rails -->
-                        <line x1="0" y1="13" x2="88" y2="13"
-                              stroke="currentColor" stroke-width="0.5"/>
-                        <line x1="0" y1="77" x2="88" y2="77"
-                              stroke="currentColor" stroke-width="0.5"/>
-                    </pattern>
-                </defs>
-                <rect width="4752" height="90" fill="url(#film-unit)"/>
-            </svg>
-        </div>
-
-        <div class="relative z-10 mx-auto max-w-6xl">
+        <div class="mx-auto max-w-6xl">
 
             <div class="reveal mb-16">
                 <p class="font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">01 — Featured work</p>
@@ -634,22 +586,6 @@
                         <div class="w-full h-full flex items-end p-10" style="background:#474747;">
                             <span class="font-mono text-[10px] tracking-[0.3em]" style="color:#c8c8a9;">008 — Untitled</span>
                         </div>
-                    </div>
-
-                    <!-- Shutter aperture — z:5 above all slots, pointer-events:none -->
-                    <div class="shutter-wrap" aria-hidden="true">
-                        <svg class="shutter-svg" viewBox="0 0 80 80" fill="none">
-                            <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.75"/>
-                            <g class="shutter-blades">
-                                <line x1="40" y1="40" x2="40"   y2="4"  stroke="currentColor" stroke-width="0.75"/>
-                                <line x1="40" y1="40" x2="71.2" y2="22" stroke="currentColor" stroke-width="0.75"/>
-                                <line x1="40" y1="40" x2="71.2" y2="58" stroke="currentColor" stroke-width="0.75"/>
-                                <line x1="40" y1="40" x2="40"   y2="76" stroke="currentColor" stroke-width="0.75"/>
-                                <line x1="40" y1="40" x2="8.8"  y2="58" stroke="currentColor" stroke-width="0.75"/>
-                                <line x1="40" y1="40" x2="8.8"  y2="22" stroke="currentColor" stroke-width="0.75"/>
-                            </g>
-                            <circle cx="40" cy="40" r="8" stroke="currentColor" stroke-width="0.75"/>
-                        </svg>
                     </div>
 
                 </div>
@@ -727,85 +663,151 @@
                 </div>
             </div>
 
-            <!-- ─── Project Figures (Phase 2: .img-zoom on inner placeholder) -->
-            <div class="space-y-28">
+            <!-- ─── Project Figures ───────────────────────────────────── -->
+            <div id="figures-wrap" class="relative space-y-28">
 
-                <figure class="reveal w-full md:w-10/12">
-                    <div class="relative overflow-hidden rounded-sm">
+                <!-- Film strip scoped to figures area; hidden beneath image blocks -->
+                <div class="film-bg" aria-hidden="true">
+                    <svg class="film-strip-svg" id="film-strip-svg"
+                         viewBox="0 0 4752 90" preserveAspectRatio="none"
+                         fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <pattern id="film-unit" x="0" y="0" width="88" height="90"
+                                     patternUnits="userSpaceOnUse">
+                                <rect x="8" y="16" width="72" height="58" rx="1"
+                                      stroke="currentColor" stroke-width="1" fill="none"/>
+                                <rect x="10" y="3"  width="8" height="7" rx="1.5" fill="currentColor"/>
+                                <rect x="40" y="3"  width="8" height="7" rx="1.5" fill="currentColor"/>
+                                <rect x="70" y="3"  width="8" height="7" rx="1.5" fill="currentColor"/>
+                                <rect x="10" y="80" width="8" height="7" rx="1.5" fill="currentColor"/>
+                                <rect x="40" y="80" width="8" height="7" rx="1.5" fill="currentColor"/>
+                                <rect x="70" y="80" width="8" height="7" rx="1.5" fill="currentColor"/>
+                                <line x1="0" y1="13" x2="88" y2="13" stroke="currentColor" stroke-width="0.5"/>
+                                <line x1="0" y1="77" x2="88" y2="77" stroke="currentColor" stroke-width="0.5"/>
+                            </pattern>
+                        </defs>
+                        <rect width="4752" height="90" fill="url(#film-unit)"/>
+                    </svg>
+                </div>
+
+                <!-- Figure 1 — left-aligned, iris shutter right -->
+                <figure class="reveal relative z-10 w-full md:w-10/12">
+                    <div class="overflow-hidden rounded-sm" style="background-color: var(--color-cream);">
+                        <div role="img" aria-label="Project 1"
+                             class="img-zoom w-full bg-accent opacity-10"
+                             style="height: 450px;"></div>
+                    </div>
+                    <figcaption class="mt-3 flex justify-between text-xs opacity-50">
+                        <span>title</span>
+                        <span>format-date</span>
+                    </figcaption>
+                    <div class="shutter-iris-wrap shutter-iris-wrap-right hidden md:flex"
+                         style="top: 50%; right: -18%;" aria-hidden="true">
+                        <svg viewBox="0 0 80 80" fill="none" style="width:100%;height:100%;">
+                            <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.5"/>
+                            <g class="shutter-iris">
+                                <g style="transform-origin:40px 40px;transform:rotate(0deg);">
+                                    <path class="shutter-blade" fill="currentColor" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(60deg);">
+                                    <path class="shutter-blade" fill="currentColor" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(120deg);">
+                                    <path class="shutter-blade" fill="currentColor" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(180deg);">
+                                    <path class="shutter-blade" fill="currentColor" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(240deg);">
+                                    <path class="shutter-blade" fill="currentColor" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(300deg);">
+                                    <path class="shutter-blade" fill="currentColor" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                            </g>
+                            <circle cx="40" cy="40" r="5" stroke="currentColor" stroke-width="0.5"/>
+                        </svg>
+                    </div>
+                </figure>
+
+                <!-- Figure 2 — right-aligned, iris shutter left -->
+                <figure class="reveal relative z-10 w-full md:w-10/12 md:ml-auto">
+                    <div class="overflow-hidden rounded-sm" style="background-color: var(--color-cream);">
                         <div role="img" aria-label="Project 2"
                              class="img-zoom w-full bg-accent opacity-10"
                              style="height: 450px;"></div>
-                        <div class="shutter-wrap" aria-hidden="true">
-                            <svg class="shutter-svg" viewBox="0 0 80 80" fill="none">
-                                <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.75"/>
-                                <g class="shutter-blades">
-                                    <line x1="40" y1="40" x2="40"   y2="4"  stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="71.2" y2="22" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="71.2" y2="58" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="40"   y2="76" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="8.8"  y2="58" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="8.8"  y2="22" stroke="currentColor" stroke-width="0.75"/>
-                                </g>
-                                <circle cx="40" cy="40" r="8" stroke="currentColor" stroke-width="0.75"/>
-                            </svg>
-                        </div>
                     </div>
                     <figcaption class="mt-3 flex justify-between text-xs opacity-50">
                         <span>title</span>
                         <span>format-date</span>
                     </figcaption>
+                    <div class="shutter-iris-wrap shutter-iris-wrap-left hidden md:flex"
+                         style="top: 50%; left: -18%;" aria-hidden="true">
+                        <svg viewBox="0 0 80 80" fill="none" style="width:100%;height:100%;">
+                            <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.5"/>
+                            <g class="shutter-iris" style="animation-delay:-7s;">
+                                <g style="transform-origin:40px 40px;transform:rotate(0deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-1.5s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(60deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-1.5s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(120deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-1.5s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(180deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-1.5s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(240deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-1.5s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(300deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-1.5s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                            </g>
+                            <circle cx="40" cy="40" r="5" stroke="currentColor" stroke-width="0.5"/>
+                        </svg>
+                    </div>
                 </figure>
 
-                <figure class="reveal w-full md:w-10/12 md:ml-auto">
-                    <div class="relative overflow-hidden rounded-sm">
+                <!-- Figure 3 — left-aligned, iris shutter right -->
+                <figure class="reveal relative z-10 w-full md:w-10/12">
+                    <div class="overflow-hidden rounded-sm" style="background-color: var(--color-cream);">
                         <div role="img" aria-label="Project 3"
                              class="img-zoom w-full bg-accent opacity-10"
                              style="height: 450px;"></div>
-                        <div class="shutter-wrap" aria-hidden="true">
-                            <svg class="shutter-svg" viewBox="0 0 80 80" fill="none">
-                                <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.75"/>
-                                <g class="shutter-blades">
-                                    <line x1="40" y1="40" x2="40"   y2="4"  stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="71.2" y2="22" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="71.2" y2="58" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="40"   y2="76" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="8.8"  y2="58" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="8.8"  y2="22" stroke="currentColor" stroke-width="0.75"/>
-                                </g>
-                                <circle cx="40" cy="40" r="8" stroke="currentColor" stroke-width="0.75"/>
-                            </svg>
-                        </div>
                     </div>
                     <figcaption class="mt-3 flex justify-between text-xs opacity-50">
                         <span>title</span>
                         <span>format-date</span>
                     </figcaption>
-                </figure>
-
-                <figure class="reveal w-full md:w-10/12">
-                    <div class="relative overflow-hidden rounded-sm">
-                        <div role="img" aria-label="Project 4"
-                             class="img-zoom w-full bg-accent opacity-10"
-                             style="height: 450px;"></div>
-                        <div class="shutter-wrap" aria-hidden="true">
-                            <svg class="shutter-svg" viewBox="0 0 80 80" fill="none">
-                                <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.75"/>
-                                <g class="shutter-blades">
-                                    <line x1="40" y1="40" x2="40"   y2="4"  stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="71.2" y2="22" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="71.2" y2="58" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="40"   y2="76" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="8.8"  y2="58" stroke="currentColor" stroke-width="0.75"/>
-                                    <line x1="40" y1="40" x2="8.8"  y2="22" stroke="currentColor" stroke-width="0.75"/>
+                    <div class="shutter-iris-wrap shutter-iris-wrap-right hidden md:flex"
+                         style="top: 50%; right: -18%;" aria-hidden="true">
+                        <svg viewBox="0 0 80 80" fill="none" style="width:100%;height:100%;">
+                            <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.5"/>
+                            <g class="shutter-iris" style="animation-delay:-14s;">
+                                <g style="transform-origin:40px 40px;transform:rotate(0deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-2.8s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
                                 </g>
-                                <circle cx="40" cy="40" r="8" stroke="currentColor" stroke-width="0.75"/>
-                            </svg>
-                        </div>
+                                <g style="transform-origin:40px 40px;transform:rotate(60deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-2.8s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(120deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-2.8s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(180deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-2.8s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(240deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-2.8s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                                <g style="transform-origin:40px 40px;transform:rotate(300deg);">
+                                    <path class="shutter-blade" fill="currentColor" style="animation-delay:-2.8s;" d="M 40 40 L 22 8.8 A 36 36 0 0 1 58 8.8 Z"/>
+                                </g>
+                            </g>
+                            <circle cx="40" cy="40" r="5" stroke="currentColor" stroke-width="0.5"/>
+                        </svg>
                     </div>
-                    <figcaption class="mt-3 flex justify-between text-xs opacity-50">
-                        <span>title</span>
-                        <span>format-date</span>
-                    </figcaption>
                 </figure>
 
             </div>
@@ -1074,6 +1076,20 @@
             document.querySelector('.gallery-strip-arrow-right')?.addEventListener('click', () => {
                 galleryStrip?.scrollTo({ left: galleryStrip.scrollWidth, behavior: 'smooth' });
             });
+
+            // Scroll-driven film strip
+            const filmStripEl  = document.getElementById('film-strip-svg');
+            const figuresWrap  = document.getElementById('figures-wrap');
+            const FILM_MAX     = 2376;
+            function tickFilm() {
+                if (!filmStripEl || !figuresWrap) return;
+                const rect     = figuresWrap.getBoundingClientRect();
+                const total    = figuresWrap.offsetHeight + window.innerHeight;
+                const progress = Math.max(0, Math.min(1, (-rect.top + window.innerHeight) / total));
+                filmStripEl.style.transform = `translateX(${-progress * FILM_MAX}px)`;
+            }
+            window.addEventListener('scroll', tickFilm, { passive: true });
+            tickFilm();
         });
     </script>
 </body>
