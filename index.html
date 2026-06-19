@@ -409,6 +409,73 @@
             outline: 2px solid var(--color-accent);
             outline-offset: 3px;
         }
+
+        /* ─── Shutter aperture overlay ───────────────────────────────── */
+        .shutter-wrap {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .shutter-svg {
+            width: min(260px, 46%);
+            height: min(260px, 46%);
+            color: var(--color-accent);
+            opacity: 0.055;
+            transition:
+                opacity   700ms cubic-bezier(0.23, 1, 0.32, 1),
+                color     500ms ease-in-out;
+        }
+        .shutter-blades {
+            transform-origin: 40px 40px;
+            transition: transform 700ms cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        /* Gate hover on real pointer devices */
+        @media (hover: hover) and (pointer: fine) {
+            .gallery-main-wrap:hover .shutter-svg { opacity: 0.16; }
+            .gallery-main-wrap:hover .shutter-blades { transform: rotate(30deg); }
+            figure:hover .shutter-svg { opacity: 0.16; }
+            figure:hover .shutter-blades { transform: rotate(30deg); }
+            .group:hover .shutter-svg { opacity: 0.16; }
+            .group:hover .shutter-blades { transform: rotate(30deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .shutter-blades { transition: none; }
+            .shutter-svg    { transition: none; }
+        }
+
+        /* ─── Film strip background ──────────────────────────────────── */
+        /* 27 frames × 88px = 2376px — animation ends on a pattern boundary */
+        @keyframes filmRoll {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-2376px); }
+        }
+        .film-bg {
+            position: absolute;
+            left: 0; right: 0;
+            top: 52%;
+            transform: translateY(-50%);
+            height: 90px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.05;
+            color: var(--color-accent);
+            transition: color 500ms ease-in-out;
+        }
+        .film-strip-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 4752px; /* 54 frames — double for seamless loop */
+            height: 90px;
+            animation: filmRoll 90s linear infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .film-strip-svg { animation-play-state: paused; }
+        }
     </style>
 </head>
 <body class="min-h-screen bg-cream text-accent/[0.83] font-sans">
@@ -452,10 +519,24 @@
             <a href="#about" aria-label="About the photographer"
                class="group relative block md:col-span-4 md:col-start-9 md:translate-y-6"
                style="opacity: 0; animation: fadeIn 1s ease-out forwards; animation-delay: 0.3s;">
-                <div class="overflow-hidden rounded-sm">
+                <div class="relative overflow-hidden rounded-sm">
                     <div role="img" aria-label="Portrait of the photographer"
                          class="w-full bg-accent opacity-20 transition-all duration-[600ms] ease-out group-hover:scale-[1.04] group-hover:opacity-40"
                          style="height: 400px;"></div>
+                    <div class="shutter-wrap" aria-hidden="true">
+                        <svg class="shutter-svg" viewBox="0 0 80 80" fill="none">
+                            <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.75"/>
+                            <g class="shutter-blades">
+                                <line x1="40" y1="40" x2="40"   y2="4"  stroke="currentColor" stroke-width="0.75"/>
+                                <line x1="40" y1="40" x2="71.2" y2="22" stroke="currentColor" stroke-width="0.75"/>
+                                <line x1="40" y1="40" x2="71.2" y2="58" stroke="currentColor" stroke-width="0.75"/>
+                                <line x1="40" y1="40" x2="40"   y2="76" stroke="currentColor" stroke-width="0.75"/>
+                                <line x1="40" y1="40" x2="8.8"  y2="58" stroke="currentColor" stroke-width="0.75"/>
+                                <line x1="40" y1="40" x2="8.8"  y2="22" stroke="currentColor" stroke-width="0.75"/>
+                            </g>
+                            <circle cx="40" cy="40" r="8" stroke="currentColor" stroke-width="0.75"/>
+                        </svg>
+                    </div>
                 </div>
                 <div class="mt-3 flex items-center justify-between text-xs opacity-50 group-hover:opacity-100">
                     <span class="font-mono uppercase tracking-[0.25em]">Portrait</span>
@@ -467,8 +548,38 @@
     </section>
 
     <!-- ─── Work ────────────────────────────────────────────────────── -->
-    <section id="work" class="px-6 pt-32 md:px-10 md:pt-48">
-        <div class="mx-auto max-w-6xl">
+    <section id="work" class="relative px-6 pt-32 md:px-10 md:pt-48">
+
+        <!-- ─── Film strip — ambient background texture ───────────────── -->
+        <div class="film-bg" aria-hidden="true">
+            <svg class="film-strip-svg" viewBox="0 0 4752 90" preserveAspectRatio="none"
+                 fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="film-unit" x="0" y="0" width="88" height="90"
+                             patternUnits="userSpaceOnUse">
+                        <!-- Frame border -->
+                        <rect x="8" y="16" width="72" height="58" rx="1"
+                              stroke="currentColor" stroke-width="1" fill="none"/>
+                        <!-- Top sprocket holes -->
+                        <rect x="10" y="3"  width="8" height="7" rx="1.5" fill="currentColor"/>
+                        <rect x="40" y="3"  width="8" height="7" rx="1.5" fill="currentColor"/>
+                        <rect x="70" y="3"  width="8" height="7" rx="1.5" fill="currentColor"/>
+                        <!-- Bottom sprocket holes -->
+                        <rect x="10" y="80" width="8" height="7" rx="1.5" fill="currentColor"/>
+                        <rect x="40" y="80" width="8" height="7" rx="1.5" fill="currentColor"/>
+                        <rect x="70" y="80" width="8" height="7" rx="1.5" fill="currentColor"/>
+                        <!-- Edge rails -->
+                        <line x1="0" y1="13" x2="88" y2="13"
+                              stroke="currentColor" stroke-width="0.5"/>
+                        <line x1="0" y1="77" x2="88" y2="77"
+                              stroke="currentColor" stroke-width="0.5"/>
+                    </pattern>
+                </defs>
+                <rect width="4752" height="90" fill="url(#film-unit)"/>
+            </svg>
+        </div>
+
+        <div class="relative z-10 mx-auto max-w-6xl">
 
             <div class="reveal mb-16">
                 <p class="font-mono text-[10px] uppercase tracking-[0.3em] opacity-50">01 — Featured work</p>
@@ -523,6 +634,22 @@
                         <div class="w-full h-full flex items-end p-10" style="background:#474747;">
                             <span class="font-mono text-[10px] tracking-[0.3em]" style="color:#c8c8a9;">008 — Untitled</span>
                         </div>
+                    </div>
+
+                    <!-- Shutter aperture — z:5 above all slots, pointer-events:none -->
+                    <div class="shutter-wrap" aria-hidden="true">
+                        <svg class="shutter-svg" viewBox="0 0 80 80" fill="none">
+                            <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.75"/>
+                            <g class="shutter-blades">
+                                <line x1="40" y1="40" x2="40"   y2="4"  stroke="currentColor" stroke-width="0.75"/>
+                                <line x1="40" y1="40" x2="71.2" y2="22" stroke="currentColor" stroke-width="0.75"/>
+                                <line x1="40" y1="40" x2="71.2" y2="58" stroke="currentColor" stroke-width="0.75"/>
+                                <line x1="40" y1="40" x2="40"   y2="76" stroke="currentColor" stroke-width="0.75"/>
+                                <line x1="40" y1="40" x2="8.8"  y2="58" stroke="currentColor" stroke-width="0.75"/>
+                                <line x1="40" y1="40" x2="8.8"  y2="22" stroke="currentColor" stroke-width="0.75"/>
+                            </g>
+                            <circle cx="40" cy="40" r="8" stroke="currentColor" stroke-width="0.75"/>
+                        </svg>
                     </div>
 
                 </div>
@@ -604,10 +731,24 @@
             <div class="space-y-28">
 
                 <figure class="reveal w-full md:w-10/12">
-                    <div class="overflow-hidden rounded-sm">
+                    <div class="relative overflow-hidden rounded-sm">
                         <div role="img" aria-label="Project 2"
                              class="img-zoom w-full bg-accent opacity-10"
                              style="height: 450px;"></div>
+                        <div class="shutter-wrap" aria-hidden="true">
+                            <svg class="shutter-svg" viewBox="0 0 80 80" fill="none">
+                                <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.75"/>
+                                <g class="shutter-blades">
+                                    <line x1="40" y1="40" x2="40"   y2="4"  stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="71.2" y2="22" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="71.2" y2="58" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="40"   y2="76" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="8.8"  y2="58" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="8.8"  y2="22" stroke="currentColor" stroke-width="0.75"/>
+                                </g>
+                                <circle cx="40" cy="40" r="8" stroke="currentColor" stroke-width="0.75"/>
+                            </svg>
+                        </div>
                     </div>
                     <figcaption class="mt-3 flex justify-between text-xs opacity-50">
                         <span>title</span>
@@ -616,10 +757,24 @@
                 </figure>
 
                 <figure class="reveal w-full md:w-10/12 md:ml-auto">
-                    <div class="overflow-hidden rounded-sm">
+                    <div class="relative overflow-hidden rounded-sm">
                         <div role="img" aria-label="Project 3"
                              class="img-zoom w-full bg-accent opacity-10"
                              style="height: 450px;"></div>
+                        <div class="shutter-wrap" aria-hidden="true">
+                            <svg class="shutter-svg" viewBox="0 0 80 80" fill="none">
+                                <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.75"/>
+                                <g class="shutter-blades">
+                                    <line x1="40" y1="40" x2="40"   y2="4"  stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="71.2" y2="22" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="71.2" y2="58" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="40"   y2="76" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="8.8"  y2="58" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="8.8"  y2="22" stroke="currentColor" stroke-width="0.75"/>
+                                </g>
+                                <circle cx="40" cy="40" r="8" stroke="currentColor" stroke-width="0.75"/>
+                            </svg>
+                        </div>
                     </div>
                     <figcaption class="mt-3 flex justify-between text-xs opacity-50">
                         <span>title</span>
@@ -628,10 +783,24 @@
                 </figure>
 
                 <figure class="reveal w-full md:w-10/12">
-                    <div class="overflow-hidden rounded-sm">
+                    <div class="relative overflow-hidden rounded-sm">
                         <div role="img" aria-label="Project 4"
                              class="img-zoom w-full bg-accent opacity-10"
                              style="height: 450px;"></div>
+                        <div class="shutter-wrap" aria-hidden="true">
+                            <svg class="shutter-svg" viewBox="0 0 80 80" fill="none">
+                                <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.75"/>
+                                <g class="shutter-blades">
+                                    <line x1="40" y1="40" x2="40"   y2="4"  stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="71.2" y2="22" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="71.2" y2="58" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="40"   y2="76" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="8.8"  y2="58" stroke="currentColor" stroke-width="0.75"/>
+                                    <line x1="40" y1="40" x2="8.8"  y2="22" stroke="currentColor" stroke-width="0.75"/>
+                                </g>
+                                <circle cx="40" cy="40" r="8" stroke="currentColor" stroke-width="0.75"/>
+                            </svg>
+                        </div>
                     </div>
                     <figcaption class="mt-3 flex justify-between text-xs opacity-50">
                         <span>title</span>
