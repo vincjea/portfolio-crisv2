@@ -418,12 +418,14 @@
             width: 160px;
             height: 160px;
             pointer-events: none;
-            opacity: 0.09;
             color: var(--color-accent);
             transition: color 500ms ease-in-out;
         }
         .shutter-iris-wrap-right { right: 0; }
         .shutter-iris-wrap-left  { left:  0; }
+
+        /* Circles keep their original subtle appearance */
+        .iris-ring { fill: none; stroke-opacity: 0.09; }
 
         /* Outer group — slow ambient rotation, only visible when open */
         .shutter-iris {
@@ -435,8 +437,13 @@
             to   { transform: rotate(360deg); }
         }
 
-        /* Blade paths — JS sets transform directly; CSS smooths the transition */
+        /* Blade paths — fill subtle, stroke visible so division lines show */
         .iris-blade {
+            fill-opacity: 0.09;
+            stroke: currentColor;
+            stroke-width: 1.2;
+            stroke-opacity: 0.35;
+            paint-order: fill stroke;
             transition: transform 1.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
@@ -703,7 +710,7 @@
                     <div class="shutter-iris-wrap shutter-iris-wrap-right hidden md:flex"
                          style="top: 50%; right: -18%;" aria-hidden="true">
                         <svg viewBox="0 0 80 80" fill="none" style="width:100%;height:100%;">
-                            <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.8"/>
+                            <circle cx="40" cy="40" r="36" class="iris-ring" stroke="currentColor" stroke-width="0.8"/>
                             <g class="shutter-iris">
                                 <g transform="rotate(0 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
                                 <g transform="rotate(60 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
@@ -712,7 +719,7 @@
                                 <g transform="rotate(240 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
                                 <g transform="rotate(300 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
                             </g>
-                            <circle cx="40" cy="40" r="4" stroke="currentColor" stroke-width="0.8"/>
+                            <circle cx="40" cy="40" r="4" class="iris-ring" stroke="currentColor" stroke-width="0.8"/>
                         </svg>
                     </div>
                 </figure>
@@ -731,7 +738,7 @@
                     <div class="shutter-iris-wrap shutter-iris-wrap-left hidden md:flex"
                          style="top: 50%; left: -18%;" aria-hidden="true">
                         <svg viewBox="0 0 80 80" fill="none" style="width:100%;height:100%;">
-                            <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.8"/>
+                            <circle cx="40" cy="40" r="36" class="iris-ring" stroke="currentColor" stroke-width="0.8"/>
                             <g class="shutter-iris">
                                 <g transform="rotate(0 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
                                 <g transform="rotate(60 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
@@ -740,7 +747,7 @@
                                 <g transform="rotate(240 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
                                 <g transform="rotate(300 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
                             </g>
-                            <circle cx="40" cy="40" r="4" stroke="currentColor" stroke-width="0.8"/>
+                            <circle cx="40" cy="40" r="4" class="iris-ring" stroke="currentColor" stroke-width="0.8"/>
                         </svg>
                     </div>
                 </figure>
@@ -759,7 +766,7 @@
                     <div class="shutter-iris-wrap shutter-iris-wrap-right hidden md:flex"
                          style="top: 50%; right: -18%;" aria-hidden="true">
                         <svg viewBox="0 0 80 80" fill="none" style="width:100%;height:100%;">
-                            <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="0.8"/>
+                            <circle cx="40" cy="40" r="36" class="iris-ring" stroke="currentColor" stroke-width="0.8"/>
                             <g class="shutter-iris">
                                 <g transform="rotate(0 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
                                 <g transform="rotate(60 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
@@ -768,7 +775,7 @@
                                 <g transform="rotate(240 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
                                 <g transform="rotate(300 40 40)"><path class="iris-blade" fill="currentColor" d="M 48 10 C 44 26, 36 58, 32 74 L 22 72 C 8 54, 12 28, 35 7 Z"/></g>
                             </g>
-                            <circle cx="40" cy="40" r="4" stroke="currentColor" stroke-width="0.8"/>
+                            <circle cx="40" cy="40" r="4" class="iris-ring" stroke="currentColor" stroke-width="0.8"/>
                         </svg>
                     </div>
                 </figure>
