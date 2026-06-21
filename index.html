@@ -1038,35 +1038,28 @@
                 galleryStrip?.scrollTo({ left: galleryStrip.scrollWidth, behavior: 'smooth' });
             });
 
-            // Iris open/close — JS sets transform directly so SVG origin is unambiguous
+            // Iris open/close
+            // All blades share the same path (petal pointing up). Rotating all by
+            // the same delta just spins the whole assembly — the filled circle never
+            // changes visually. Instead, scale each blade 0→1 from the centre origin
+            // so blades unfurl outward on open and collapse to a point on close.
             (function () {
-                const OPEN_DEG = 28;
-
                 function setIris(wrap, open) {
                     wrap.querySelectorAll('.iris-blade').forEach(function (blade) {
                         var base = parseInt(blade.dataset.base, 10);
-                        var deg  = base + (open ? OPEN_DEG : 0);
                         blade.style.transformOrigin = '40px 40px';
-                        blade.style.transform       = 'rotate(' + deg + 'deg)';
+                        blade.style.transform = 'rotate(' + base + 'deg) ' + (open ? 'scale(1)' : 'scale(0)');
                     });
                 }
 
-                // Initialise all blades to closed position immediately
-                document.querySelectorAll('.shutter-iris-wrap').forEach(function (wrap) {
-                    setIris(wrap, false);
-                });
-
-                // Open when the iris centre is within the middle 60% of the viewport.
-                // IntersectionObserver's threshold is based on element *area ratio*, which
-                // breaks when the wrap extends off-screen (right/left: -18%). Directly
-                // checking getBoundingClientRect().center is always correct.
                 var irisWraps = Array.from(document.querySelectorAll('.shutter-iris-wrap'));
+                irisWraps.forEach(function (wrap) { setIris(wrap, false); });
 
                 function tickIris() {
                     var vH = window.innerHeight;
                     irisWraps.forEach(function (wrap) {
                         var rect = wrap.getBoundingClientRect();
-                        if (rect.width === 0 && rect.height === 0) return; // hidden on mobile
+                        if (rect.width === 0 && rect.height === 0) return;
                         var centerY = rect.top + rect.height * 0.5;
                         setIris(wrap, centerY > vH * 0.2 && centerY < vH * 0.8);
                     });
