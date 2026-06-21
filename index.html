@@ -418,16 +418,17 @@
             width: 160px;
             height: 160px;
             pointer-events: none;
+            clip-path: circle(73px at center);
             color: var(--color-accent);
             transition: color 500ms ease-in-out;
         }
         .shutter-iris-wrap-right { right: 0; }
         .shutter-iris-wrap-left  { left:  0; }
 
-        /* Circles keep their original subtle appearance */
-        .iris-ring { fill: none; stroke-opacity: 0.09; }
+        /* Outer + inner ring circles */
+        .iris-ring { fill: none; }
 
-        /* Outer group — slow ambient rotation, only visible when open */
+        /* Outer group — slow ambient rotation */
         .shutter-iris {
             transform-origin: 40px 40px;
             animation: irisRotate 38s linear infinite;
@@ -437,12 +438,10 @@
             to   { transform: rotate(360deg); }
         }
 
-        /* Blade paths — fill subtle, stroke visible so division lines show */
+        /* Solid blades — cream stroke creates visible seam between adjacent blades */
         .iris-blade {
-            fill-opacity: 0.09;
-            stroke: currentColor;
-            stroke-width: 1.2;
-            stroke-opacity: 0.35;
+            stroke: var(--color-cream);
+            stroke-width: 0.8;
             paint-order: fill stroke;
             transition: transform 1.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
@@ -1054,7 +1053,7 @@
                 function setIris(wrap, open) {
                     wrap.querySelectorAll('.iris-blade').forEach(function (blade) {
                         blade.style.transformOrigin = '40px 8px';
-                        blade.style.transform = open ? 'rotate(30deg)' : 'rotate(0deg)';
+                        blade.style.transform = open ? 'rotate(45deg)' : 'rotate(0deg)';
                     });
                 }
 
