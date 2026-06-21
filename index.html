@@ -1056,16 +1056,24 @@
                     setIris(wrap, false);
                 });
 
-                // Open when iris enters the middle ~60% of the viewport
-                var obs = new IntersectionObserver(function (entries) {
-                    entries.forEach(function (entry) {
-                        setIris(entry.target, entry.isIntersecting);
-                    });
-                }, { rootMargin: '-20% 0px', threshold: 0.1 });
+                // Open when the iris centre is within the middle 60% of the viewport.
+                // IntersectionObserver's threshold is based on element *area ratio*, which
+                // breaks when the wrap extends off-screen (right/left: -18%). Directly
+                // checking getBoundingClientRect().center is always correct.
+                var irisWraps = Array.from(document.querySelectorAll('.shutter-iris-wrap'));
 
-                document.querySelectorAll('.shutter-iris-wrap').forEach(function (el) {
-                    obs.observe(el);
-                });
+                function tickIris() {
+                    var vH = window.innerHeight;
+                    irisWraps.forEach(function (wrap) {
+                        var rect = wrap.getBoundingClientRect();
+                        if (rect.width === 0 && rect.height === 0) return; // hidden on mobile
+                        var centerY = rect.top + rect.height * 0.5;
+                        setIris(wrap, centerY > vH * 0.2 && centerY < vH * 0.8);
+                    });
+                }
+
+                window.addEventListener('scroll', tickIris, { passive: true });
+                tickIris();
             }());
 
             // Scroll-driven film strip
