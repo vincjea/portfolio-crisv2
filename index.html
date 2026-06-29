@@ -450,6 +450,21 @@
             .shutter-iris { animation: none; }
             .iris-blade   { transition: none; }
         }
+        /* ─── Portrait click — shutter flash overlay ────────────────────── */
+        @keyframes shutterFlash {
+            0%   { opacity: 0; }
+            18%  { opacity: 0.6; }
+            100% { opacity: 0; }
+        }
+        .portrait-flash {
+            position: absolute;
+            inset: 0;
+            background-color: var(--color-accent);
+            pointer-events: none;
+            animation: shutterFlash 520ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            transition: background-color 500ms ease-in-out;
+        }
+
 
         /* ─── Film strip — scroll-driven, scoped to figures area ────────── */
         .film-bg {
@@ -516,7 +531,7 @@
                 </div>
             </div>
 
-            <a href="#about" aria-label="About the photographer"
+            <a id="portrait-link" href="#about" aria-label="About the photographer"
                class="group relative block md:col-span-4 md:col-start-9 md:translate-y-6"
                style="opacity: 0; animation: fadeIn 1s ease-out forwards; animation-delay: 0.3s;">
                 <div class="overflow-hidden rounded-sm">
@@ -969,6 +984,27 @@
             }, { root: null, threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
 
             document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+
+            // ═══════════════════════════════════════════════════════════════
+            // Portrait click — shutter flash then smooth scroll to #about
+            // ═══════════════════════════════════════════════════════════════
+
+            document.getElementById('portrait-link')?.addEventListener('click', function (e) {
+                e.preventDefault();
+                const wrap = this.querySelector('.overflow-hidden');
+                const flash = document.createElement('div');
+                flash.className = 'portrait-flash';
+                wrap.style.position = 'relative';
+                wrap.appendChild(flash);
+                flash.className = 'portrait-flash';
+                wrap.style.position = 'relative';
+                wrap.appendChild(flash);
+                flash.addEventListener('animationend', function () {
+                    flash.remove();
+                    document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+                }, { once: true });
+            });
 
 
             // ═══════════════════════════════════════════════════════════════
