@@ -450,6 +450,7 @@
             .shutter-iris { animation: none; }
             .iris-blade   { transition: none; }
         }
+
         /* ─── Portrait click — shutter flash overlay ────────────────────── */
         @keyframes shutterFlash {
             0%   { opacity: 0; }
@@ -464,7 +465,6 @@
             animation: shutterFlash 520ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
             transition: background-color 500ms ease-in-out;
         }
-
 
         /* ─── Film strip — scroll-driven, scoped to figures area ────────── */
         .film-bg {
@@ -537,7 +537,7 @@
                 <div class="overflow-hidden rounded-sm">
                     <img src="portrait.jpg" alt="Portrait of the photographer"
                          class="w-full object-cover transition-all duration-[600ms] ease-out group-hover:scale-[1.04]"
-                        style="height: 400px; object-position: center;">
+                         style="height: 400px; object-position: center center;">
                 </div>
                 <div class="mt-3 flex items-center justify-between text-[12px] opacity-50 group-hover:opacity-100 tracking-[0.02em]">
                     <span class="font-mono uppercase tracking-[0.25em]">Portrait</span>
@@ -990,6 +990,22 @@
             // Portrait click — shutter flash then smooth scroll to #about
             // ═══════════════════════════════════════════════════════════════
 
+            function smoothScrollTo(targetY, duration) {
+                const startY = window.scrollY;
+                const distance = targetY - startY;
+                const startTime = performance.now();
+                function easeInOutCubic(t) {
+                    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                }
+                function tick(now) {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+                    if (progress < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+            }
+
             document.getElementById('portrait-link')?.addEventListener('click', function (e) {
                 e.preventDefault();
                 const wrap = this.querySelector('.overflow-hidden');
@@ -997,12 +1013,10 @@
                 flash.className = 'portrait-flash';
                 wrap.style.position = 'relative';
                 wrap.appendChild(flash);
-                flash.className = 'portrait-flash';
-                wrap.style.position = 'relative';
-                wrap.appendChild(flash);
                 flash.addEventListener('animationend', function () {
                     flash.remove();
-                    document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+                    const about = document.getElementById('about');
+                    smoothScrollTo(about.getBoundingClientRect().top + window.scrollY, 900);
                 }, { once: true });
             });
 
