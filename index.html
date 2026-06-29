@@ -990,6 +990,21 @@
             // Portrait click — shutter flash then smooth scroll to #about
             // ═══════════════════════════════════════════════════════════════
 
+            function smoothScrollTo(targetY, duration) {
+                const startY = window.scrollY;
+                const distance = targetY - startY;
+                const startTime = performance.now();
+                function easeInOutCubic(t) {
+                    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                }
+                function tick(now) {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    window.scrollTonOutCubic(progress));
+                    if (progress < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFra
+            }
             document.getElementById('portrait-link')?.addEventListener('click', function (e) {
                 e.preventDefault();
                 const wrap = this.querySelector('.overflow-hidden');
@@ -1002,7 +1017,8 @@
                 wrap.appendChild(flash);
                 flash.addEventListener('animationend', function () {
                     flash.remove();
-                    document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+                    const about = document.getElementById('about');
+                    smoothScrollTo(about.getBoundingClientRect().top + window.scrollY, 900);
                 }, { once: true });
             });
 
