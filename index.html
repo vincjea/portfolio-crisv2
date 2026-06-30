@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+\<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -408,62 +408,6 @@
         #theme-trigger:focus-visible {
             outline: 2px solid var(--color-accent);
             outline-offset: 3px;
-        }
-
-        /* ─── Iris shutter — background decoration beside figures ──────── */
-
-        .shutter-iris-wrap {
-            position: absolute;
-            transform: translateY(-50%);
-            width: 160px;
-            height: 160px;
-            pointer-events: none;
-            clip-path: circle(73px at center);
-            color: var(--color-accent);
-            transition: color 500ms ease-in-out;
-        }
-        .shutter-iris-wrap-right { right: 0; }
-        .shutter-iris-wrap-left  { left:  0; }
-
-        /* Outer + inner ring circles */
-        .iris-ring { fill: none; }
-
-        /* Outer group — slow ambient rotation */
-        .shutter-iris {
-            transform-origin: 40px 40px;
-            animation: irisRotate 38s linear infinite;
-        }
-        @keyframes irisRotate {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
-        }
-
-        /* Solid blades — cream stroke creates visible seam between adjacent blades */
-        .iris-blade {
-            stroke: var(--color-cream);
-            stroke-width: 0.8;
-            paint-order: fill stroke;
-            transition: transform 1.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .shutter-iris { animation: none; }
-            .iris-blade   { transition: none; }
-        }
-
-        /* ─── Portrait click — shutter flash overlay ────────────────────── */
-        @keyframes shutterFlash {
-            0%   { opacity: 0; }
-            18%  { opacity: 0.6; }
-            100% { opacity: 0; }
-        }
-        .portrait-flash {
-            position: absolute;
-            inset: 0;
-            background-color: var(--color-accent);
-            pointer-events: none;
-            animation: shutterFlash 520ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
-            transition: background-color 500ms ease-in-out;
         }
 
         /* ─── Film strip — scroll-driven, scoped to figures area ────────── */
